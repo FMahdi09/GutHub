@@ -1,13 +1,12 @@
 package Guthub.Backend.Controllers;
 
+import Guthub.Backend.Dtos.RegisterDto;
 import Guthub.Backend.Dtos.UserDto;
 import Guthub.Backend.Mappers.UserMapper;
 import Guthub.Backend.Models.UserEntity;
 import Guthub.Backend.Services.User.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -25,6 +24,16 @@ public class UserController
     {
         this.userService = userService;
         this.userMapper = userMapper;
+    }
+
+    @PostMapping
+    public UserDto createUser(@RequestBody RegisterDto registerDto)
+    {
+        UserEntity user = userMapper.fromDto(registerDto);
+
+        UserEntity createdUser = userService.createUser(user);
+
+        return userMapper.toDto(createdUser);
     }
 
     @GetMapping
