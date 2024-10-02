@@ -1,5 +1,7 @@
 package Guthub.Backend.Controllers;
 
+import Guthub.Backend.Dtos.UserDto;
+import Guthub.Backend.Mappers.UserMapper;
 import Guthub.Backend.Models.UserEntity;
 import Guthub.Backend.Services.User.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,15 +17,21 @@ public class UserController
 {
     private final UserService userService;
 
+    private final UserMapper userMapper;
+
     @Autowired
-    public UserController(UserService userService)
+    public UserController(UserService userService,
+                          UserMapper userMapper)
     {
         this.userService = userService;
+        this.userMapper = userMapper;
     }
 
     @GetMapping
-    public List<UserEntity> getUsers()
+    public List<UserDto> getUsers()
     {
-        return userService.getAllUsers();
+        List<UserEntity> entities = userService.getAllUsers();
+
+        return userMapper.toDtoList(entities);
     }
 }
