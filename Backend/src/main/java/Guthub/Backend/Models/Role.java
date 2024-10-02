@@ -24,6 +24,11 @@ public class Role
     )
     private String name;
 
+    public Role(String name)
+    {
+        this.name = name;
+    }
+
     public GrantedAuthority getAuthority()
     {
         return new SimpleGrantedAuthority("ROLE_" + name);
