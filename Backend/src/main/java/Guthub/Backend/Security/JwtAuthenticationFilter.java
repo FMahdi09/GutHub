@@ -18,7 +18,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-public class JwtAuthenticationFilter extends OncePerRequestFilter {
+public class JwtAuthenticationFilter extends OncePerRequestFilter
+{
     @Autowired
     private TokenService tokenService;
 
@@ -29,13 +30,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain)
-            throws ServletException, IOException {
-        if (request.getServletPath().contains("api/v1/auth")) {
+            throws ServletException, IOException
+    {
+        if (request.getServletPath().contains("api/v1/auth"))
+        {
             filterChain.doFilter(request, response);
             return;
         }
 
-        try {
+        try
+        {
             final String accessToken = getTokenFromRequest(request);
 
             final String username = tokenService.getSubjectFromAccessToken(accessToken);
@@ -59,16 +63,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     .setAuthentication(authenticationToken);
 
             filterChain.doFilter(request, response);
-        } catch (InvalidTokenException | ExpiredTokenException ex) {
+        }
+        catch (InvalidTokenException | ExpiredTokenException ex)
+        {
             filterChain.doFilter(request, response);
         }
     }
 
     private String getTokenFromRequest(HttpServletRequest request)
-            throws InvalidTokenException {
+            throws InvalidTokenException
+    {
         String bearerToken = request.getHeader("Authorization");
 
-        if (!StringUtils.hasText(bearerToken) || !bearerToken.startsWith("Bearer ")) {
+        if (!StringUtils.hasText(bearerToken) || !bearerToken.startsWith("Bearer "))
+        {
             throw new InvalidTokenException("malformed authorization header");
         }
 

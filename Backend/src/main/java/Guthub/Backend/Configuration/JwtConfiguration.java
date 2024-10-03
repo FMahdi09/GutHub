@@ -1,6 +1,7 @@
 package Guthub.Backend.Configuration;
 
-public interface JwtConfiguration {
+public interface JwtConfiguration
+{
     String getAccessTokenSecret();
 
     String getRefreshTokenSecret();

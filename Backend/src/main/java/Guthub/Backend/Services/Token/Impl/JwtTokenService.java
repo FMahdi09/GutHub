@@ -15,19 +15,22 @@ import java.util.Date;
 import java.util.function.Function;
 
 @Service
-public class JwtTokenService implements TokenService {
+public class JwtTokenService implements TokenService
+{
     private final Key accessTokenSecret;
 
     private final Key refreshTokenSecret;
 
     @Autowired
-    public JwtTokenService(JwtConfiguration config) {
+    public JwtTokenService(JwtConfiguration config)
+    {
         this.accessTokenSecret = getSigningKey(config.getAccessTokenSecret());
         this.refreshTokenSecret = getSigningKey(config.getRefreshTokenSecret());
     }
 
     @Override
-    public String generateAccessToken(String subject, Date issuedAt, Date expiresAt) {
+    public String generateAccessToken(String subject, Date issuedAt, Date expiresAt)
+    {
         return Jwts.builder()
                 .setSubject(subject)
                 .setIssuedAt(issuedAt)
@@ -37,7 +40,8 @@ public class JwtTokenService implements TokenService {
     }
 
     @Override
-    public String generateRefreshToken(String subject, Date issuedAt, Date expiresAt) {
+    public String generateRefreshToken(String subject, Date issuedAt, Date expiresAt)
+    {
         return Jwts.builder()
                 .setSubject(subject)
                 .setIssuedAt(issuedAt)
@@ -48,39 +52,49 @@ public class JwtTokenService implements TokenService {
 
     @Override
     public String getSubjectFromAccessToken(String accessToken)
-            throws InvalidTokenException, ExpiredTokenException {
+            throws InvalidTokenException, ExpiredTokenException
+    {
         return extractClaim(accessToken, accessTokenSecret, Claims::getSubject);
     }
 
     @Override
     public String getSubjectFromRefreshToken(String refreshToken)
-            throws InvalidTokenException, ExpiredTokenException {
+            throws InvalidTokenException, ExpiredTokenException
+    {
         return extractClaim(refreshToken, refreshTokenSecret, Claims::getSubject);
     }
 
     private <T> T extractClaim(String token, Key key, Function<Claims, T> claimsResolver)
-            throws ExpiredTokenException, InvalidTokenException {
+            throws ExpiredTokenException, InvalidTokenException
+    {
         final Claims claims = extractAllClaims(token, key);
         return claimsResolver.apply(claims);
     }
 
     private Claims extractAllClaims(String token, Key key)
-            throws ExpiredTokenException, InvalidTokenException {
-        try {
+            throws ExpiredTokenException, InvalidTokenException
+    {
+        try
+        {
             return Jwts
                     .parserBuilder()
                     .setSigningKey(key)
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
-        } catch (ExpiredJwtException ex) {
+        }
+        catch (ExpiredJwtException ex)
+        {
             throw new ExpiredTokenException(ex.getMessage());
-        } catch (JwtException ex) {
+        }
+        catch (JwtException ex)
+        {
             throw new InvalidTokenException(ex.getMessage());
         }
     }
 
-    private Key getSigningKey(String base64Secret) {
+    private Key getSigningKey(String base64Secret)
+    {
         byte[] keyBytes = Decoders.BASE64.decode(base64Secret);
         return Keys.hmacShaKeyFor(keyBytes);
     }
