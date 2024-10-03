@@ -5,9 +5,6 @@ on:
     paths:
       - .github/**
       - Backend/**
-    branches:
-      - master
-      - dev
 
 jobs:
   lint:
