@@ -1,7 +1,6 @@
 package Guthub.Backend.Services.Authentication.Impl;
 
 import Guthub.Backend.Configuration.AuthenticationConfiguration;
-import Guthub.Backend.Dtos.TokenDto;
 import Guthub.Backend.Services.Authentication.AuthenticationService;
 import Guthub.Backend.Services.Token.TokenPair;
 import Guthub.Backend.Services.Token.TokenService;

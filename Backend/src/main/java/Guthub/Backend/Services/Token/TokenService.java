@@ -5,8 +5,7 @@ import Guthub.Backend.Services.Token.Exceptions.InvalidTokenException;
 
 import java.util.Date;
 
-public interface TokenService
-{
+public interface TokenService {
     String generateAccessToken(String subject, Date issuedAt, Date expiresAt);
 
     String generateRefreshToken(String subject, Date issuedAt, Date expiresAt);

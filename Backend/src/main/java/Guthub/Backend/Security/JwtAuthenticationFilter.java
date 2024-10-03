@@ -12,15 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-public class JwtAuthenticationFilter extends OncePerRequestFilter
-{
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private TokenService tokenService;
 
@@ -31,16 +29,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain)
-            throws ServletException, IOException
-    {
-        if (request.getServletPath().contains("api/v1/auth"))
-        {
+            throws ServletException, IOException {
+        if (request.getServletPath().contains("api/v1/auth")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        try
-        {
+        try {
             final String accessToken = getTokenFromRequest(request);
 
             final String username = tokenService.getSubjectFromAccessToken(accessToken);
@@ -48,11 +43,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter
             final UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
 
             final UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(
-                        userDetails,
-                        null,
-                        userDetails.getAuthorities()
-                );
+                    new UsernamePasswordAuthenticationToken(
+                            userDetails,
+                            null,
+                            userDetails.getAuthorities()
+                    );
 
             authenticationToken.setDetails(
                     new WebAuthenticationDetailsSource()
@@ -64,20 +59,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter
                     .setAuthentication(authenticationToken);
 
             filterChain.doFilter(request, response);
-        }
-        catch (InvalidTokenException | ExpiredTokenException ex)
-        {
+        } catch (InvalidTokenException | ExpiredTokenException ex) {
             filterChain.doFilter(request, response);
         }
     }
 
     private String getTokenFromRequest(HttpServletRequest request)
-            throws InvalidTokenException
-    {
+            throws InvalidTokenException {
         String bearerToken = request.getHeader("Authorization");
 
-        if (!StringUtils.hasText(bearerToken) || !bearerToken.startsWith("Bearer "))
-        {
+        if (!StringUtils.hasText(bearerToken) || !bearerToken.startsWith("Bearer ")) {
             throw new InvalidTokenException("malformed authorization header");
         }
 

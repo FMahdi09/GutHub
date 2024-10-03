@@ -10,6 +10,5 @@ import java.lang.annotation.Target;
 @Tag("UnitTest")
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE, ElementType.METHOD, ElementType.ANNOTATION_TYPE})
-public @interface UnitTest
-{
+public @interface UnitTest {
 }

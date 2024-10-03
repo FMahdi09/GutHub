@@ -15,8 +15,7 @@ import org.mockito.Mock;
 import java.util.Date;
 import java.util.stream.Stream;
 
-public class JwtTokenServiceTests extends BaseUnitTest
-{
+public class JwtTokenServiceTests extends BaseUnitTest {
     //region <testData>
     private static final String accessTokenSecret = "/XY7T4/5RESFRkjPPzIXOiUHhN4iHfvb8EGKrRVI1qfwOcSdXU0QJigsrfcFuLE5zE3aIJXuX87LWSeUAX8/C+n/USK9Orkd1qDZUS3aVwc/X1caY/nphTsdR1cjBk6Zpn5LUl/3qPf6zTm/ByLpedYe5ywZk6Qy99L5hNPyiMbaYs6IAcKMhQhWhc7+ZLAsT6CjOLczoou9/EzNd7RyuKGQJDsTLRMYcqmRQQ==";
 
@@ -29,8 +28,7 @@ public class JwtTokenServiceTests extends BaseUnitTest
     private JwtTokenService jwtTokenService;
 
     //region <testFunctions>
-    private static Stream<Arguments> getValidAccessTokenData()
-    {
+    private static Stream<Arguments> getValidAccessTokenData() {
         return Stream.of(
                 Arguments.of(
                         "Subject",
@@ -53,8 +51,7 @@ public class JwtTokenServiceTests extends BaseUnitTest
         );
     }
 
-    private static Stream<Arguments> getValidRefreshTokenData()
-    {
+    private static Stream<Arguments> getValidRefreshTokenData() {
         return Stream.of(
                 Arguments.of(
                         "Subject",
@@ -77,8 +74,7 @@ public class JwtTokenServiceTests extends BaseUnitTest
         );
     }
 
-    private static Stream<Arguments> getValidAccessToken()
-    {
+    private static Stream<Arguments> getValidAccessToken() {
         return Stream.of(
                 Arguments.of(
                         "Subject",
@@ -95,8 +91,7 @@ public class JwtTokenServiceTests extends BaseUnitTest
         );
     }
 
-    private static Stream<Arguments> getValidRefreshToken()
-    {
+    private static Stream<Arguments> getValidRefreshToken() {
         return Stream.of(
                 Arguments.of(
                         "Subject",
@@ -113,24 +108,21 @@ public class JwtTokenServiceTests extends BaseUnitTest
         );
     }
 
-    private static Stream<Arguments> getExpiredAccessToken()
-    {
+    private static Stream<Arguments> getExpiredAccessToken() {
         return Stream.of(
                 Arguments.of("eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJTdWJqZWN0IiwiaWF0Ijo5OTk5OTk5OTk5LCJleHAiOjEwMDB9.t_TW1hXGVa6cbw7aSYj-1ZJzKZObdFc7azLNaptwcr4PIhNPrXDEY8nyRMfSbm_0Eg_WsrGfdQs7f_Jvl75FKw"),
                 Arguments.of("eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJTdWJqZWN0IiwiaWF0Ijo5OTk5OTk5OTk5LCJleHAiOjB9.1VtPqisa2N8-TsWZe9rXhkMshxiX9wqBmqynGhdqjpoB3jjWLIk8kOoMKFqHG46r7YkJXd-9LxBoW_1PcZsYxw")
         );
     }
 
-    private static Stream<Arguments> getExpiredRefreshToken()
-    {
+    private static Stream<Arguments> getExpiredRefreshToken() {
         return Stream.of(
                 Arguments.of("eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJTdWJqZWN0IiwiaWF0Ijo5OTk5OTk5OTk5LCJleHAiOjB9.YhqTH5FI1v3NpC3MmI8M8MN1491yTxGDqfxzfk9xfNFw3kJz_IiHQk9Yq3Dif0hYLmCYWrNn51pHfGKzgbDntg"),
                 Arguments.of("eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJTdWJqZWN0IiwiaWF0Ijo5OTk5OTk5OTk5LCJleHAiOjEwMDB9.8RcMsmJLVpgLWMiZEdzsh7j3EelYqTYvZn_RbMcUjOw8BR3tCaDWWdSncZY4rXywFgnVRih-1bhA6I8UOUDaYw")
         );
     }
 
-    private static Stream<Arguments> getInvalidToken()
-    {
+    private static Stream<Arguments> getInvalidToken() {
         return Stream.of(
                 Arguments.of("invalid token"),
                 Arguments.of("Integer consequat maximus fermentum. Vestibulum nisl ligula, tristique sed mollis quis, fermentum porttitor erat. Fusce varius hendrerit congue. Maecenas semper suscipit ipsum, sed tempor justo pretium vitae. Sed lobortis maximus purus, nec placerat massa faucibus id. In ante nisi, vestibulum et molestie ut, tristique vel leo. Suspendisse est neque, lobortis vel mattis a, rhoncus eu sapien."),
@@ -140,8 +132,7 @@ public class JwtTokenServiceTests extends BaseUnitTest
     //endregion
 
     @BeforeEach
-    void setUp()
-    {
+    void setUp() {
         BDDMockito.given(configuration.getAccessTokenSecret())
                 .willReturn(accessTokenSecret);
 
@@ -156,8 +147,7 @@ public class JwtTokenServiceTests extends BaseUnitTest
     void generateAccessToken_givenValidData_generateToken(String subject,
                                                           Date issuedAt,
                                                           Date expiresAt,
-                                                          String expectedToken)
-    {
+                                                          String expectedToken) {
         // act
         String createdToken = jwtTokenService.generateAccessToken(subject, issuedAt, expiresAt);
 
@@ -170,8 +160,7 @@ public class JwtTokenServiceTests extends BaseUnitTest
     void generateRefreshToken_givenValidData_generateToken(String subject,
                                                            Date issuedAt,
                                                            Date expiresAt,
-                                                           String expectedToken)
-    {
+                                                           String expectedToken) {
         // act
         String createdToken = jwtTokenService.generateRefreshToken(subject, issuedAt, expiresAt);
 
@@ -183,8 +172,7 @@ public class JwtTokenServiceTests extends BaseUnitTest
     @MethodSource("getValidAccessToken")
     void getSubjectFromAccessToken_givenValidToken_getSubject(String expectedSubject,
                                                               String accessToken)
-            throws Exception
-    {
+            throws Exception {
         // act
         String extractedSubject = jwtTokenService.getSubjectFromAccessToken(accessToken);
 
@@ -194,8 +182,7 @@ public class JwtTokenServiceTests extends BaseUnitTest
 
     @ParameterizedTest
     @MethodSource("getExpiredAccessToken")
-    void getSubjectFromAccessToken_givenExpiredToken_throwException(String expiredToken)
-    {
+    void getSubjectFromAccessToken_givenExpiredToken_throwException(String expiredToken) {
         // act & assert
         Assertions.assertThrows(
                 ExpiredTokenException.class,
@@ -205,8 +192,7 @@ public class JwtTokenServiceTests extends BaseUnitTest
 
     @ParameterizedTest
     @MethodSource("getInvalidToken")
-    void getSubjectFromAccessToken_givenInvalidToken_throwException(String invalidToken)
-    {
+    void getSubjectFromAccessToken_givenInvalidToken_throwException(String invalidToken) {
         // act & assert
         Assertions.assertThrows(
                 InvalidTokenException.class,
@@ -218,8 +204,7 @@ public class JwtTokenServiceTests extends BaseUnitTest
     @MethodSource("getValidRefreshToken")
     void getSubjectFromRefreshToken_givenValidToken_getSubject(String expectedSubject,
                                                                String refreshToken)
-            throws Exception
-    {
+            throws Exception {
         // act
         String extractedSubject = jwtTokenService.getSubjectFromRefreshToken(refreshToken);
 
@@ -229,8 +214,7 @@ public class JwtTokenServiceTests extends BaseUnitTest
 
     @ParameterizedTest
     @MethodSource("getExpiredRefreshToken")
-    void getSubjectFromRefreshToken_givenExpiredToken_throwException(String expiredToken)
-    {
+    void getSubjectFromRefreshToken_givenExpiredToken_throwException(String expiredToken) {
         // act & assert
         Assertions.assertThrows(
                 ExpiredTokenException.class,
@@ -240,8 +224,7 @@ public class JwtTokenServiceTests extends BaseUnitTest
 
     @ParameterizedTest
     @MethodSource("getInvalidToken")
-    void getSubjectFromRefreshToken_givenInvalidToken_throwException(String invalidToken)
-    {
+    void getSubjectFromRefreshToken_givenInvalidToken_throwException(String invalidToken) {
         // act & assert
         Assertions.assertThrows(
                 InvalidTokenException.class,
