@@ -26,11 +26,6 @@ public class UserMapper
         return modelMapper.map(user, UserDto.class);
     }
 
-    public UserEntity fromDto(UserDto userDto)
-    {
-        return modelMapper.map(userDto, UserEntity.class);
-    }
-
     public UserEntity fromDto(RegisterDto registerDto)
     {
         return modelMapper.map(registerDto, UserEntity.class);
