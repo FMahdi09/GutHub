@@ -35,8 +35,7 @@ jobs:
           distribution: zulu
           java-version: ${{ matrix.java }}
       
-      - run: cd Backend
-      - run: ls
+      - run: cd Backend & ls
 
       - name: run unit tests
         run: mvn clean test -PUnit
