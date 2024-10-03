@@ -12,6 +12,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -112,5 +113,26 @@ public class UserControllerTests extends BaseIntegrationTest
         // assert
         Assertions.assertEquals(username, createdUser.getUsername());
         Assertions.assertEquals(email, createdUser.getEmail());
+    }
+
+    @ParameterizedTest
+    @MethodSource("getValidUserData")
+    void createUser_givenExistingUsername_throwException(String username,
+                                                         String password,
+                                                         String email)
+    {
+        // arrange
+        RegisterDto toCreate = new RegisterDto();
+        toCreate.setUsername(username);
+        toCreate.setPassword(password);
+        toCreate.setEmail(email);
+
+        // act & assert
+        userController.createUser(toCreate);
+
+        Assertions.assertThrows(
+                DataIntegrityViolationException.class,
+                () -> userController.createUser(toCreate)
+        );
     }
 }
