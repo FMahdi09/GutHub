@@ -2,6 +2,8 @@ package Guthub.Backend.Services.Token.Impl;
 
 import Guthub.Backend.BaseUnitTest;
 import Guthub.Backend.Configuration.JwtConfiguration;
+import Guthub.Backend.Services.Token.Exceptions.ExpiredTokenException;
+import Guthub.Backend.Services.Token.Exceptions.InvalidTokenException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -110,6 +112,31 @@ public class JwtTokenServiceTests extends BaseUnitTest
                 )
         );
     }
+
+    private static Stream<Arguments> getExpiredAccessToken()
+    {
+        return Stream.of(
+                Arguments.of("eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJTdWJqZWN0IiwiaWF0Ijo5OTk5OTk5OTk5LCJleHAiOjEwMDB9.t_TW1hXGVa6cbw7aSYj-1ZJzKZObdFc7azLNaptwcr4PIhNPrXDEY8nyRMfSbm_0Eg_WsrGfdQs7f_Jvl75FKw"),
+                Arguments.of("eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJTdWJqZWN0IiwiaWF0Ijo5OTk5OTk5OTk5LCJleHAiOjB9.1VtPqisa2N8-TsWZe9rXhkMshxiX9wqBmqynGhdqjpoB3jjWLIk8kOoMKFqHG46r7YkJXd-9LxBoW_1PcZsYxw")
+        );
+    }
+
+    private static Stream<Arguments> getExpiredRefreshToken()
+    {
+        return Stream.of(
+                Arguments.of("eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJTdWJqZWN0IiwiaWF0Ijo5OTk5OTk5OTk5LCJleHAiOjB9.YhqTH5FI1v3NpC3MmI8M8MN1491yTxGDqfxzfk9xfNFw3kJz_IiHQk9Yq3Dif0hYLmCYWrNn51pHfGKzgbDntg"),
+                Arguments.of("eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJTdWJqZWN0IiwiaWF0Ijo5OTk5OTk5OTk5LCJleHAiOjEwMDB9.8RcMsmJLVpgLWMiZEdzsh7j3EelYqTYvZn_RbMcUjOw8BR3tCaDWWdSncZY4rXywFgnVRih-1bhA6I8UOUDaYw")
+        );
+    }
+
+    private static Stream<Arguments> getInvalidToken()
+    {
+        return Stream.of(
+                Arguments.of("invalid token"),
+                Arguments.of("Integer consequat maximus fermentum. Vestibulum nisl ligula, tristique sed mollis quis, fermentum porttitor erat. Fusce varius hendrerit congue. Maecenas semper suscipit ipsum, sed tempor justo pretium vitae. Sed lobortis maximus purus, nec placerat massa faucibus id. In ante nisi, vestibulum et molestie ut, tristique vel leo. Suspendisse est neque, lobortis vel mattis a, rhoncus eu sapien."),
+                Arguments.of("EyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJTdWJqZWN0IiwiaWF0Ijo5OTk5OTk5OTk5LCJleHAiOjEwMDB9.8RcMsmJLVpgLWMiZEdzsh7j3EelYqTYvZn_RbMcUjOw8BR3tCaDWWdSncZY4rXywFgnVRih-1bhA6I8UOUDaYw")
+        );
+    }
     //endregion
 
     @BeforeEach
@@ -166,6 +193,28 @@ public class JwtTokenServiceTests extends BaseUnitTest
     }
 
     @ParameterizedTest
+    @MethodSource("getExpiredAccessToken")
+    void getSubjectFromAccessToken_givenExpiredToken_throwException(String expiredToken)
+    {
+        // act & assert
+        Assertions.assertThrows(
+                ExpiredTokenException.class,
+                () -> jwtTokenService.getSubjectFromAccessToken(expiredToken)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("getInvalidToken")
+    void getSubjectFromAccessToken_givenInvalidToken_throwException(String invalidToken)
+    {
+        // act & assert
+        Assertions.assertThrows(
+                InvalidTokenException.class,
+                () -> jwtTokenService.getSubjectFromAccessToken(invalidToken)
+        );
+    }
+
+    @ParameterizedTest
     @MethodSource("getValidRefreshToken")
     void getSubjectFromRefreshToken_givenValidToken_getSubject(String expectedSubject,
                                                                String refreshToken)
@@ -176,5 +225,27 @@ public class JwtTokenServiceTests extends BaseUnitTest
 
         // assert
         Assertions.assertEquals(expectedSubject, extractedSubject);
+    }
+
+    @ParameterizedTest
+    @MethodSource("getExpiredRefreshToken")
+    void getSubjectFromRefreshToken_givenExpiredToken_throwException(String expiredToken)
+    {
+        // act & assert
+        Assertions.assertThrows(
+                ExpiredTokenException.class,
+                () -> jwtTokenService.getSubjectFromRefreshToken(expiredToken)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("getInvalidToken")
+    void getSubjectFromRefreshToken_givenInvalidToken_throwException(String invalidToken)
+    {
+        // act & assert
+        Assertions.assertThrows(
+                InvalidTokenException.class,
+                () -> jwtTokenService.getSubjectFromRefreshToken(invalidToken)
+        );
     }
 }
