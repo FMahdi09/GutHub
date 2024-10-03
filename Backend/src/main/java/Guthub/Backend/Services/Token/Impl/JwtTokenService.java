@@ -1,9 +1,10 @@
 package Guthub.Backend.Services.Token.Impl;
 
 import Guthub.Backend.Configuration.JwtConfiguration;
+import Guthub.Backend.Services.Token.Exceptions.ExpiredTokenException;
+import Guthub.Backend.Services.Token.Exceptions.InvalidTokenException;
 import Guthub.Backend.Services.Token.TokenService;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.function.Function;
 
 @Service
 public class JwtTokenService implements TokenService
@@ -46,6 +48,49 @@ public class JwtTokenService implements TokenService
                 .setExpiration(expiresAt)
                 .signWith(refreshTokenSecret, SignatureAlgorithm.HS512)
                 .compact();
+    }
+
+    @Override
+    public String getSubjectFromAccessToken(String accessToken)
+            throws InvalidTokenException, ExpiredTokenException
+    {
+        return extractClaim(accessToken, accessTokenSecret, Claims::getSubject);
+    }
+
+    @Override
+    public String getSubjectFromRefreshToken(String refreshToken)
+            throws InvalidTokenException, ExpiredTokenException
+    {
+        return extractClaim(refreshToken, refreshTokenSecret, Claims::getSubject);
+    }
+
+    private <T> T extractClaim(String token, Key key, Function<Claims, T> claimsResolver)
+                throws ExpiredTokenException, InvalidTokenException
+    {
+        final Claims claims = extractAllClaims(token, key);
+        return claimsResolver.apply(claims);
+    }
+
+    private Claims extractAllClaims(String token, Key key)
+            throws ExpiredTokenException, InvalidTokenException
+    {
+        try
+        {
+            return Jwts
+                    .parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        }
+        catch (ExpiredJwtException ex)
+        {
+            throw new ExpiredTokenException(ex.getMessage());
+        }
+        catch (JwtException ex)
+        {
+            throw new InvalidTokenException(ex.getMessage());
+        }
     }
 
     private Key getSigningKey(String base64Secret)

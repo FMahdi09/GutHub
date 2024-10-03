@@ -74,6 +74,42 @@ public class JwtTokenServiceTests extends BaseUnitTest
                 )
         );
     }
+
+    private static Stream<Arguments> getValidAccessToken()
+    {
+        return Stream.of(
+                Arguments.of(
+                        "Subject",
+                        "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJTdWJqZWN0IiwiaWF0Ijo5OTk5OTk5OTk5LCJleHAiOjk5OTk5OTk5OTl9.T5piMTIgPfC6SXuIhVdMzp4tWgiYBGPmDm_xHvEQEoNfYXz0vdOjeExZifhEZ9flnhnYMtlIcbhC8yDwrH78dQ"
+                ),
+                Arguments.of(
+                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis molestie mauris at tortor pulvinar, vitae facilisis sem finibus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sapien tortor, suscipit nec dui sed, elementum vehicula nibh. Donec viverra eleifend sapien, eget pellentesque massa aliquet eget. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Proin eu nibh eleifend, consequat massa non, fringilla leo. Phasellus sed orci lorem. In lobortis hendrerit neque. Fusce vitae enim ullamcorper, mattis mauris vel, dictum erat. Pellentesque sed metus non velit feugiat interdum quis nec orci. Proin elementum tellus ipsum, sit amet elementum massa dignissim at. Morbi sed placerat massa, porttitor accumsan mi. Duis ut metus vel purus faucibus lacinia sit amet ac enim. Sed justo nisl, finibus eget auctor ac, facilisis sed turpis. Vivamus purus nisl, pharetra sed fringilla et, malesuada at enim. Nunc lorem est, viverra ac sapien vel, vestibulum blandit augue.",
+                        "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJMb3JlbSBpcHN1bSBkb2xvciBzaXQgYW1ldCwgY29uc2VjdGV0dXIgYWRpcGlzY2luZyBlbGl0LiBEdWlzIG1vbGVzdGllIG1hdXJpcyBhdCB0b3J0b3IgcHVsdmluYXIsIHZpdGFlIGZhY2lsaXNpcyBzZW0gZmluaWJ1cy4gTG9yZW0gaXBzdW0gZG9sb3Igc2l0IGFtZXQsIGNvbnNlY3RldHVyIGFkaXBpc2NpbmcgZWxpdC4gQWVuZWFuIHNhcGllbiB0b3J0b3IsIHN1c2NpcGl0IG5lYyBkdWkgc2VkLCBlbGVtZW50dW0gdmVoaWN1bGEgbmliaC4gRG9uZWMgdml2ZXJyYSBlbGVpZmVuZCBzYXBpZW4sIGVnZXQgcGVsbGVudGVzcXVlIG1hc3NhIGFsaXF1ZXQgZWdldC4gT3JjaSB2YXJpdXMgbmF0b3F1ZSBwZW5hdGlidXMgZXQgbWFnbmlzIGRpcyBwYXJ0dXJpZW50IG1vbnRlcywgbmFzY2V0dXIgcmlkaWN1bHVzIG11cy4gUHJvaW4gZXUgbmliaCBlbGVpZmVuZCwgY29uc2VxdWF0IG1hc3NhIG5vbiwgZnJpbmdpbGxhIGxlby4gUGhhc2VsbHVzIHNlZCBvcmNpIGxvcmVtLiBJbiBsb2JvcnRpcyBoZW5kcmVyaXQgbmVxdWUuIEZ1c2NlIHZpdGFlIGVuaW0gdWxsYW1jb3JwZXIsIG1hdHRpcyBtYXVyaXMgdmVsLCBkaWN0dW0gZXJhdC4gUGVsbGVudGVzcXVlIHNlZCBtZXR1cyBub24gdmVsaXQgZmV1Z2lhdCBpbnRlcmR1bSBxdWlzIG5lYyBvcmNpLiBQcm9pbiBlbGVtZW50dW0gdGVsbHVzIGlwc3VtLCBzaXQgYW1ldCBlbGVtZW50dW0gbWFzc2EgZGlnbmlzc2ltIGF0LiBNb3JiaSBzZWQgcGxhY2VyYXQgbWFzc2EsIHBvcnR0aXRvciBhY2N1bXNhbiBtaS4gRHVpcyB1dCBtZXR1cyB2ZWwgcHVydXMgZmF1Y2lidXMgbGFjaW5pYSBzaXQgYW1ldCBhYyBlbmltLiBTZWQganVzdG8gbmlzbCwgZmluaWJ1cyBlZ2V0IGF1Y3RvciBhYywgZmFjaWxpc2lzIHNlZCB0dXJwaXMuIFZpdmFtdXMgcHVydXMgbmlzbCwgcGhhcmV0cmEgc2VkIGZyaW5naWxsYSBldCwgbWFsZXN1YWRhIGF0IGVuaW0uIE51bmMgbG9yZW0gZXN0LCB2aXZlcnJhIGFjIHNhcGllbiB2ZWwsIHZlc3RpYnVsdW0gYmxhbmRpdCBhdWd1ZS4iLCJpYXQiOjk5OTk5OTk5OTksImV4cCI6OTk5OTk5OTk5OX0.HI7hQorY-GoV79noHDdjW6Ck5K-RTFV_CYGI6Biz9ZbvTuWBW5RTgvvBlTgXBRvFSlm8T7bnGtpTSy-J0N-YAQ"
+                ),
+                Arguments.of(
+                        null,
+                        "eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjk5OTk5OTk5OTksImV4cCI6OTk5OTk5OTk5OX0.sFVDSvYdS4nkWGBIc3ZaTUmNZkpfAPnmTvKZcyg0vtaHH4omy1d0-i0jB3PYpJSifmyLrU6MAcZpdowp1wyxqw"
+                )
+        );
+    }
+
+    private static Stream<Arguments> getValidRefreshToken()
+    {
+        return Stream.of(
+                Arguments.of(
+                        "Subject",
+                        "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJTdWJqZWN0IiwiaWF0Ijo5OTk5OTk5OTk5LCJleHAiOjk5OTk5OTk5OTl9.ftmXQ9zeB04_fCWqHbiuMR4RldgyOfwCmI6MDqqkRtzHWmaI0ehfnn5sFPTXZ5wDf6COm5oAeKjrqqLnqs7amg"
+                ),
+                Arguments.of(
+                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis molestie mauris at tortor pulvinar, vitae facilisis sem finibus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sapien tortor, suscipit nec dui sed, elementum vehicula nibh. Donec viverra eleifend sapien, eget pellentesque massa aliquet eget. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Proin eu nibh eleifend, consequat massa non, fringilla leo. Phasellus sed orci lorem. In lobortis hendrerit neque. Fusce vitae enim ullamcorper, mattis mauris vel, dictum erat. Pellentesque sed metus non velit feugiat interdum quis nec orci. Proin elementum tellus ipsum, sit amet elementum massa dignissim at. Morbi sed placerat massa, porttitor accumsan mi. Duis ut metus vel purus faucibus lacinia sit amet ac enim. Sed justo nisl, finibus eget auctor ac, facilisis sed turpis. Vivamus purus nisl, pharetra sed fringilla et, malesuada at enim. Nunc lorem est, viverra ac sapien vel, vestibulum blandit augue.",
+                        "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJMb3JlbSBpcHN1bSBkb2xvciBzaXQgYW1ldCwgY29uc2VjdGV0dXIgYWRpcGlzY2luZyBlbGl0LiBEdWlzIG1vbGVzdGllIG1hdXJpcyBhdCB0b3J0b3IgcHVsdmluYXIsIHZpdGFlIGZhY2lsaXNpcyBzZW0gZmluaWJ1cy4gTG9yZW0gaXBzdW0gZG9sb3Igc2l0IGFtZXQsIGNvbnNlY3RldHVyIGFkaXBpc2NpbmcgZWxpdC4gQWVuZWFuIHNhcGllbiB0b3J0b3IsIHN1c2NpcGl0IG5lYyBkdWkgc2VkLCBlbGVtZW50dW0gdmVoaWN1bGEgbmliaC4gRG9uZWMgdml2ZXJyYSBlbGVpZmVuZCBzYXBpZW4sIGVnZXQgcGVsbGVudGVzcXVlIG1hc3NhIGFsaXF1ZXQgZWdldC4gT3JjaSB2YXJpdXMgbmF0b3F1ZSBwZW5hdGlidXMgZXQgbWFnbmlzIGRpcyBwYXJ0dXJpZW50IG1vbnRlcywgbmFzY2V0dXIgcmlkaWN1bHVzIG11cy4gUHJvaW4gZXUgbmliaCBlbGVpZmVuZCwgY29uc2VxdWF0IG1hc3NhIG5vbiwgZnJpbmdpbGxhIGxlby4gUGhhc2VsbHVzIHNlZCBvcmNpIGxvcmVtLiBJbiBsb2JvcnRpcyBoZW5kcmVyaXQgbmVxdWUuIEZ1c2NlIHZpdGFlIGVuaW0gdWxsYW1jb3JwZXIsIG1hdHRpcyBtYXVyaXMgdmVsLCBkaWN0dW0gZXJhdC4gUGVsbGVudGVzcXVlIHNlZCBtZXR1cyBub24gdmVsaXQgZmV1Z2lhdCBpbnRlcmR1bSBxdWlzIG5lYyBvcmNpLiBQcm9pbiBlbGVtZW50dW0gdGVsbHVzIGlwc3VtLCBzaXQgYW1ldCBlbGVtZW50dW0gbWFzc2EgZGlnbmlzc2ltIGF0LiBNb3JiaSBzZWQgcGxhY2VyYXQgbWFzc2EsIHBvcnR0aXRvciBhY2N1bXNhbiBtaS4gRHVpcyB1dCBtZXR1cyB2ZWwgcHVydXMgZmF1Y2lidXMgbGFjaW5pYSBzaXQgYW1ldCBhYyBlbmltLiBTZWQganVzdG8gbmlzbCwgZmluaWJ1cyBlZ2V0IGF1Y3RvciBhYywgZmFjaWxpc2lzIHNlZCB0dXJwaXMuIFZpdmFtdXMgcHVydXMgbmlzbCwgcGhhcmV0cmEgc2VkIGZyaW5naWxsYSBldCwgbWFsZXN1YWRhIGF0IGVuaW0uIE51bmMgbG9yZW0gZXN0LCB2aXZlcnJhIGFjIHNhcGllbiB2ZWwsIHZlc3RpYnVsdW0gYmxhbmRpdCBhdWd1ZS4iLCJpYXQiOjk5OTk5OTk5OTksImV4cCI6OTk5OTk5OTk5OX0.UiMrQYPwLcNny0FaXgPcfwLSH_b-9jYAyU7Xk-VVX5EI-s2ffktI25dCSlhpxy4m1dGQOUM1T6UP5Ibs4bEe1g"
+                ),
+                Arguments.of(
+                        null,
+                        "eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjk5OTk5OTk5OTksImV4cCI6OTk5OTk5OTk5OX0.H9phJvIo-rk3SKrumfseM_EoiSntdk43eHcDjj4vDcUQG7Ub5lhQFXzpVpm9-suHyTjoGdUMRseFVKgu4-WtJQ"
+                )
+        );
+    }
     //endregion
 
     @BeforeEach
@@ -114,5 +150,31 @@ public class JwtTokenServiceTests extends BaseUnitTest
 
         // assert
         Assertions.assertEquals(expectedToken, createdToken);
+    }
+
+    @ParameterizedTest
+    @MethodSource("getValidAccessToken")
+    void getSubjectFromAccessToken_givenValidToken_getSubject(String expectedSubject,
+                                                              String accessToken)
+            throws Exception
+    {
+        // act
+        String extractedSubject = jwtTokenService.getSubjectFromAccessToken(accessToken);
+
+        // assert
+        Assertions.assertEquals(expectedSubject, extractedSubject);
+    }
+
+    @ParameterizedTest
+    @MethodSource("getValidRefreshToken")
+    void getSubjectFromRefreshToken_givenValidToken_getSubject(String expectedSubject,
+                                                               String refreshToken)
+            throws Exception
+    {
+        // act
+        String extractedSubject = jwtTokenService.getSubjectFromRefreshToken(refreshToken);
+
+        // assert
+        Assertions.assertEquals(expectedSubject, extractedSubject);
     }
 }
