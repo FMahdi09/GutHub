@@ -9,9 +9,13 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "guthub")
 @Getter
 @Setter
-public class MainConfiguration implements JwtConfiguration
+public class MainConfiguration implements JwtConfiguration, AuthenticationConfiguration
 {
     private String accessTokenSecret;
 
     private String refreshTokenSecret;
+
+    private int accessTokenDuration;
+
+    private int refreshTokenDuration;
 }
