@@ -3,6 +3,7 @@ name: GutHub Backend
 on:
   push:
     paths:
+      - .github/**
       - Backend/**
     branches:
       - master
@@ -20,6 +21,9 @@ jobs:
   test:
     needs: lint
     runs-on: ubuntu-22.04
+    defaults:
+      run:
+        working-directory: ./Backend
     strategy:
       matrix:
         java: [ 23 ]
@@ -35,8 +39,6 @@ jobs:
           distribution: zulu
           java-version: ${{ matrix.java }}
       
-      - run: cd Backend & ls
-
       - name: run unit tests
         run: mvn clean test -PUnit
 
