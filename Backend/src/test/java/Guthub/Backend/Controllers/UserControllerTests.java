@@ -51,9 +51,9 @@ public class UserControllerTests extends BaseIntegrationTest
     private static Stream<Arguments> getValidUserData()
     {
         return Stream.of(
-                Arguments.of("username", "changeMe", "email"),
-                Arguments.of("donald duck", "superSecret", "email"),
-                Arguments.of("dagobert duck", "money", "email")
+                Arguments.of(new RegisterDto("username", "changeMe", "email")),
+                Arguments.of(new RegisterDto("donald duck", "secret", "email")),
+                Arguments.of(new RegisterDto("dagobert duck", "money", "email"))
         );
     }
 
@@ -97,36 +97,20 @@ public class UserControllerTests extends BaseIntegrationTest
 
     @ParameterizedTest
     @MethodSource("getValidUserData")
-    void createUser_givenValidData_createUser(String username,
-                                              String password,
-                                              String email)
+    void createUser_givenValidData_createUser(RegisterDto toCreate)
     {
-        // arrange
-        RegisterDto toCreate = new RegisterDto();
-        toCreate.setUsername(username);
-        toCreate.setPassword(password);
-        toCreate.setEmail(email);
-
         // act
         UserDto createdUser = userController.createUser(toCreate);
 
         // assert
-        Assertions.assertEquals(username, createdUser.getUsername());
-        Assertions.assertEquals(email, createdUser.getEmail());
+        Assertions.assertEquals(toCreate.getUsername(), createdUser.getUsername());
+        Assertions.assertEquals(toCreate.getEmail(), createdUser.getEmail());
     }
 
     @ParameterizedTest
     @MethodSource("getValidUserData")
-    void createUser_givenExistingUsername_throwException(String username,
-                                                         String password,
-                                                         String email)
+    void createUser_givenExistingUsername_throwException(RegisterDto toCreate)
     {
-        // arrange
-        RegisterDto toCreate = new RegisterDto();
-        toCreate.setUsername(username);
-        toCreate.setPassword(password);
-        toCreate.setEmail(email);
-
         // act & assert
         userController.createUser(toCreate);
 
