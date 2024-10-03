@@ -36,6 +36,7 @@ jobs:
           java-version: ${{ matrix.java }}
       
       - run: cd Backend
+      - run: ls
 
       - name: run unit tests
         run: mvn clean test -PUnit
