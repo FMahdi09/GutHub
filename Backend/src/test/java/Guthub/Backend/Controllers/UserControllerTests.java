@@ -48,6 +48,7 @@ public class UserControllerTests extends BaseIntegrationTest
     @Autowired
     private UserRepository userRepository;
 
+    //region <testFunctions>
     private static Stream<Arguments> getValidUserData()
     {
         return Stream.of(
@@ -64,6 +65,7 @@ public class UserControllerTests extends BaseIntegrationTest
                 Arguments.of(Arrays.asList(trick, tick, track))
         );
     }
+    //endregion
 
     @AfterEach
     void tearDown()
