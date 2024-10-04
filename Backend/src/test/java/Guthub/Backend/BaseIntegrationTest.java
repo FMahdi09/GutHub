@@ -15,9 +15,10 @@ import org.testcontainers.utility.TestcontainersConfiguration;
 @SpringBootTest
 @Testcontainers
 @Sql(scripts = "/scripts/initRoles.sql")
-public class BaseIntegrationTest
+public abstract class BaseIntegrationTest
 {
     @Container
     @ServiceConnection
-    static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:16.0");
+    static PostgreSQLContainer<CustomPostgreSQLContainer> postgreSQLContainer =
+            CustomPostgreSQLContainer.getInstance();
 }
