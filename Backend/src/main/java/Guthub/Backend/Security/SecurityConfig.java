@@ -40,7 +40,9 @@ public class SecurityConfig
                 )
                 // configure route access rights
                 .authorizeHttpRequests(authorize -> authorize
-                        .anyRequest().permitAll()
+                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/users").permitAll()
+                        .anyRequest().authenticated()
                 )
                 // add our own filters
                 .addFilterBefore(
