@@ -6,6 +6,7 @@ import Guthub.Backend.Dtos.UserDto;
 import Guthub.Backend.Mappers.UserMapper;
 import Guthub.Backend.Models.UserEntity;
 import Guthub.Backend.Services.User.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +29,7 @@ public class UserController
     }
 
     @PostMapping
-    public DetailedUserDto createUser(@RequestBody RegisterDto registerDto)
+    public DetailedUserDto createUser(@Valid @RequestBody RegisterDto registerDto)
     {
         UserEntity user = userMapper.fromRegisterDto(registerDto);
 
