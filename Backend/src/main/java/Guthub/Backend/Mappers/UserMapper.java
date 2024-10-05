@@ -1,5 +1,6 @@
 package Guthub.Backend.Mappers;
 
+import Guthub.Backend.Dtos.DetailedUserDto;
 import Guthub.Backend.Dtos.RegisterDto;
 import Guthub.Backend.Dtos.UserDto;
 import Guthub.Backend.Models.UserEntity;
@@ -21,20 +22,30 @@ public class UserMapper
         this.modelMapper = modelMapper;
     }
 
-    public UserDto toDto(UserEntity user)
+    public UserDto toUserDto(UserEntity user)
     {
         return modelMapper.map(user, UserDto.class);
     }
 
-    public UserEntity fromDto(RegisterDto registerDto)
+    public DetailedUserDto toDetailedUserDto(UserEntity user)
+    {
+        return modelMapper.map(user, DetailedUserDto.class);
+    }
+
+    public UserEntity fromDetailedUserDto(DetailedUserDto detailedUserDto)
+    {
+        return modelMapper.map(detailedUserDto, UserEntity.class);
+    }
+
+    public UserEntity fromRegisterDto(RegisterDto registerDto)
     {
         return modelMapper.map(registerDto, UserEntity.class);
     }
 
-    public List<UserDto> toDtoList(List<UserEntity> users)
+    public List<UserDto> toUserDtoList(List<UserEntity> users)
     {
         return users.stream()
-                .map(this::toDto)
+                .map(this::toUserDto)
                 .collect(Collectors.toList());
     }
 }

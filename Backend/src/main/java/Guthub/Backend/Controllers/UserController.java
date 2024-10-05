@@ -1,5 +1,6 @@
 package Guthub.Backend.Controllers;
 
+import Guthub.Backend.Dtos.DetailedUserDto;
 import Guthub.Backend.Dtos.RegisterDto;
 import Guthub.Backend.Dtos.UserDto;
 import Guthub.Backend.Mappers.UserMapper;
@@ -27,13 +28,13 @@ public class UserController
     }
 
     @PostMapping
-    public UserDto createUser(@RequestBody RegisterDto registerDto)
+    public DetailedUserDto createUser(@RequestBody RegisterDto registerDto)
     {
-        UserEntity user = userMapper.fromDto(registerDto);
+        UserEntity user = userMapper.fromRegisterDto(registerDto);
 
         UserEntity createdUser = userService.createUser(user);
 
-        return userMapper.toDto(createdUser);
+        return userMapper.toDetailedUserDto(createdUser);
     }
 
     @GetMapping
@@ -41,6 +42,6 @@ public class UserController
     {
         List<UserEntity> entities = userService.getAllUsers();
 
-        return userMapper.toDtoList(entities);
+        return userMapper.toUserDtoList(entities);
     }
 }
