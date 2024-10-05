@@ -61,6 +61,27 @@ public class UserControllerTests extends BaseIntegrationTest
                 )
         );
     }
+
+    private static Stream<Arguments> getInvalidRegisterData()
+    {
+        return Stream.of(
+                Arguments.of(
+                        new RegisterDto("a", "password", "email@mail.com")
+                ),
+                Arguments.of(
+                        new RegisterDto("username", "waaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaayTooLong", "email@mail.com")
+                ),
+                Arguments.of(
+                        new RegisterDto("username", "password", "not an email")
+                ),
+                Arguments.of(
+                        new RegisterDto("", "", "")
+                ),
+                Arguments.of(
+                        new RegisterDto(null, null, null)
+                )
+        );
+    }
     //endregion
 
     @Test
@@ -148,5 +169,21 @@ public class UserControllerTests extends BaseIntegrationTest
                         .content(requestBody))
                 // assert
                 .andExpect(status().isConflict());
+    }
+
+    @ParameterizedTest
+    @MethodSource("getInvalidRegisterData")
+    void createUser_givenInvalidData_returnBadRequest(RegisterDto registerDto)
+            throws Exception
+    {
+        // arrange
+        String requestBody = objectMapper.writeValueAsString(registerDto);
+
+        // act
+        mockMvc.perform(post(USER_ENDPOINT)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody))
+                // assert
+                .andExpect(status().isBadRequest());
     }
 }
