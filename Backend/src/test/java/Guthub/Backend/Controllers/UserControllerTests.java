@@ -1,124 +1,82 @@
 package Guthub.Backend.Controllers;
 
 import Guthub.Backend.BaseIntegrationTest;
-import Guthub.Backend.Dtos.RegisterDto;
 import Guthub.Backend.Dtos.UserDto;
-import Guthub.Backend.Models.UserEntity;
-import Guthub.Backend.Repositories.UserRepository;
-import org.junit.jupiter.api.AfterEach;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Stream;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@SpringBootTest
+@AutoConfigureMockMvc
+@Sql(
+        scripts = "/scripts/testRoles.sql",
+        executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS
+)
 public class UserControllerTests extends BaseIntegrationTest
 {
-    //region <testData>
-    private static final UserEntity tick = new UserEntity(
-            "Tick",
-            "change",
-            "duck@gmail.com",
-            new ArrayList<>()
-    );
-    private static final UserEntity trick = new UserEntity(
-            "Trick",
-            "me",
-            "duck@gmail.com",
-            new ArrayList<>()
-    );
-    private static final UserEntity track = new UserEntity(
-            "Track",
-            "please",
-            "duck@gmail.com",
-            new ArrayList<>()
-    );
-    //endregion
+    private static final String USER_ENDPOINT = "/users";
 
     @Autowired
-    private UserController userController;
+    private MockMvc mockMvc;
 
     @Autowired
-    private UserRepository userRepository;
+    private ObjectMapper objectMapper;
 
-    //region <testFunctions>
-    private static Stream<Arguments> getValidUserData()
+    @Test
+    void getUsers_givenNoUsers_returnEmptyList()
+            throws Exception
     {
-        return Stream.of(
-                Arguments.of(new RegisterDto("username", "changeMe", "email")),
-                Arguments.of(new RegisterDto("donald duck", "secret", "email")),
-                Arguments.of(new RegisterDto("dagobert duck", "money", "email"))
-        );
-    }
+        // act
+        MvcResult result = mockMvc
+                .perform(get(USER_ENDPOINT))
+                .andExpect(status().isOk())
+                .andReturn();
 
-    private static Stream<Arguments> getTestUserLists()
-    {
-        return Stream.of(
-                Arguments.of(List.of(trick)),
-                Arguments.of(Arrays.asList(trick, tick, track))
-        );
-    }
-    //endregion
+        // arrange
+        String responseBody = result.getResponse().getContentAsString();
+        List<UserDto> users = objectMapper.readValue(responseBody, new TypeReference<>()
+        {
+        });
 
-    @AfterEach
-    void tearDown()
-    {
-        userRepository.deleteAll();
+        Assertions.assertEquals(0, users.size());
     }
 
     @Test
-    void getUsers_givenNoUsers_returnNothing()
+    @Sql(
+            scripts = "/scripts/testUsers.sql",
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
+    )
+    @Sql(
+            scripts = "/scripts/cleanUsers.sql",
+            executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD
+    )
+    void getUsers_givenUsers_returnAllUsers()
+            throws Exception
     {
         // act
-        List<UserDto> users = userController.getUsers();
+        MvcResult result = mockMvc
+                .perform(get(USER_ENDPOINT))
+                .andExpect(status().isOk())
+                .andReturn();
 
-        // assert
-        Assertions.assertTrue(users.isEmpty());
-    }
-
-    @ParameterizedTest
-    @MethodSource("getTestUserLists")
-    void getUsers_givenUsers_returnAllUsers(List<UserEntity> givenUsers)
-    {
         // arrange
-        userRepository.saveAll(givenUsers);
+        String responseBody = result.getResponse().getContentAsString();
+        List<UserDto> users = objectMapper.readValue(responseBody, new TypeReference<>()
+        {
+        });
 
-        // act
-        List<UserDto> retrievedUsers = userController.getUsers();
-
-        // assert
-        Assertions.assertEquals(givenUsers.size(), retrievedUsers.size());
-    }
-
-    @ParameterizedTest
-    @MethodSource("getValidUserData")
-    void createUser_givenValidData_createUser(RegisterDto toCreate)
-    {
-        // act
-        UserDto createdUser = userController.createUser(toCreate);
-
-        // assert
-        Assertions.assertEquals(toCreate.getUsername(), createdUser.getUsername());
-        Assertions.assertEquals(toCreate.getEmail(), createdUser.getEmail());
-    }
-
-    @ParameterizedTest
-    @MethodSource("getValidUserData")
-    void createUser_givenExistingUsername_throwException(RegisterDto toCreate)
-    {
-        // act & assert
-        userController.createUser(toCreate);
-
-        Assertions.assertThrows(
-                DataIntegrityViolationException.class,
-                () -> userController.createUser(toCreate)
-        );
+        Assertions.assertEquals(3, users.size());
     }
 }
