@@ -1,12 +1,15 @@
 INSERT INTO users
-    (username, password, email)
-VALUES ('Sol Weintraub',
+    (id, username, password, email)
+VALUES (0,
+        'Sol Weintraub',
         '$2a$10$BXsPCGLlzmaTTNzL/WbySOORdjWs5O6CItiK7VrYmJUitndV/ES9C', -- Barnard
         'sol@mail.com'),
-       ('Lenar Hoyt',
+       (1,
+        'Lenar Hoyt',
         '$2a$10$jqbtIpHVrmiAp1Cstzh0SeS8jSU5peH4MoDvn8KFkT0.qm27Nor22', -- Armaghast
         'hoyt@mail.com'),
-       ('Martin Silenus',
+       (2,
+        'Martin Silenus',
         '$2a$10$TSFCyxsNEuyZY9DnN3CIGOgbksx3rTKJ2V4MUxWjJzAWQTFDYVugO', -- Prophet
         'silenus@mail.com');
 
