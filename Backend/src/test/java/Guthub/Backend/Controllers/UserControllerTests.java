@@ -54,10 +54,10 @@ public class UserControllerTests extends BaseIntegrationTest
                         new RegisterDto("username", "password", "email@mail.com")
                 ),
                 Arguments.of(
-                        new RegisterDto("Ghanima", "spoil of war", "ghani@mail.com")
+                        new RegisterDto("Ghanima", "SpoilOfWar", "ghani@mail.com")
                 ),
                 Arguments.of(
-                        new RegisterDto("Leto ||", "Noree", "hwi@mail.com")
+                        new RegisterDto("Leto ||", "HwiNoree", "hwi@mail.com")
                 )
         );
     }

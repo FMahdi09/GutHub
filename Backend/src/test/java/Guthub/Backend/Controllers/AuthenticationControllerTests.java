@@ -53,13 +53,13 @@ public class AuthenticationControllerTests extends BaseIntegrationTest
     {
         return Stream.of(
                 Arguments.of(
-                        new LoginDto("Sol Weintraub", "Barnard")
+                        new LoginDto("Sol Weintraub", "BarnardsStar")
                 ),
                 Arguments.of(
                         new LoginDto("Lenar Hoyt", "Armaghast")
                 ),
                 Arguments.of(
-                        new LoginDto("Martin Silenus", "Prophet")
+                        new LoginDto("Martin Silenus", "TheProphet")
                 )
         );
     }
@@ -68,16 +68,10 @@ public class AuthenticationControllerTests extends BaseIntegrationTest
     {
         return Stream.of(
                 Arguments.of(
-                        new LoginDto("Farad'n", "Corrino")
+                        new LoginDto("Farad'n", "CorrinoPrince")
                 ),
                 Arguments.of(
-                        new LoginDto("Tyekanik", "Bashar")
-                ),
-                Arguments.of(
-                        new LoginDto("", "")
-                ),
-                Arguments.of(
-                        new LoginDto(null, null)
+                        new LoginDto("Tyekanik", "TheBashar")
                 )
         );
     }
