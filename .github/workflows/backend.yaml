@@ -38,6 +38,13 @@ jobs:
           cache: maven
           cache-dependency-path: Backend/pom.xml
       
+      - name: Cache Maven packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-maven
+
       - name: run unit tests
         run: mvn clean test -PUnit
 
