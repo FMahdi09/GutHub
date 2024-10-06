@@ -33,7 +33,7 @@ public class GlobalExceptionHandler
     {
         List<String> errorList = new ArrayList<>();
 
-        ex.getBindingResult().getAllErrors().forEach((error) ->
+        ex.getBindingResult().getAllErrors().forEach(error ->
         {
             String fieldName;
 
