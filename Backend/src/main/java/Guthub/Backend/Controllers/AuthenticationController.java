@@ -6,6 +6,7 @@ import Guthub.Backend.Services.Authentication.AuthenticationService;
 import Guthub.Backend.Services.Token.TokenPair;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,7 +27,7 @@ public class AuthenticationController
 
     @PostMapping(path = "/login")
     public TokenDto login(HttpServletResponse response,
-                          @RequestBody LoginDto loginDto)
+                          @Valid @RequestBody LoginDto loginDto)
     {
         TokenPair tokens = authenticationService.login(
                 loginDto.getUsername(),
