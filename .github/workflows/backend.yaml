@@ -35,6 +35,8 @@ jobs:
         with:
           distribution: zulu
           java-version: ${{ matrix.java }}
+          cache: maven
+          cache-dependency-path: Backend/pom.xml
       
       - name: run unit tests
         run: mvn clean test -PUnit
