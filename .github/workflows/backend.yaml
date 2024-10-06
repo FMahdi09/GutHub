@@ -44,10 +44,10 @@ jobs:
           restore-keys: ${{ runner.os }}-maven
 
       - name: run unit tests
-        run: mvn clean test -PUnit
+        run: mvn -B clean test -PUnit
 
       - name: run integration tests
-        run: mvn clean test -PIntegration
+        run: mvn -B clean test -PIntegration
 
   build:
     needs: test
