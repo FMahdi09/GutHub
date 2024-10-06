@@ -36,7 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         scripts = "/scripts/cleanUsers.sql",
         executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD
 )
-public class UserControllerTests extends BaseIntegrationTest
+class UserControllerTests extends BaseIntegrationTest
 {
     private static final String USER_ENDPOINT = "/users";
 

@@ -15,7 +15,7 @@ import org.mockito.Mock;
 import java.util.Date;
 import java.util.stream.Stream;
 
-public class JwtTokenServiceTests extends BaseUnitTest
+class JwtTokenServiceTests extends BaseUnitTest
 {
     //region <testData>
     private static final String ACCESS_TOKEN_SECRET = "/XY7T4/5RESFRkjPPzIXOiUHhN4iHfvb8EGKrRVI1qfwOcSdXU0QJigsrfcFuLE5zE3aIJXuX87LWSeUAX8/C+n/USK9Orkd1qDZUS3aVwc/X1caY/nphTsdR1cjBk6Zpn5LUl/3qPf6zTm/ByLpedYe5ywZk6Qy99L5hNPyiMbaYs6IAcKMhQhWhc7+ZLAsT6CjOLczoou9/EzNd7RyuKGQJDsTLRMYcqmRQQ==";

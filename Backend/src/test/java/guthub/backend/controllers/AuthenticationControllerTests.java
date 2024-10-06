@@ -35,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         scripts = "/scripts/cleanUsers.sql",
         executionPhase = Sql.ExecutionPhase.AFTER_TEST_CLASS
 )
-public class AuthenticationControllerTests extends BaseIntegrationTest
+class AuthenticationControllerTests extends BaseIntegrationTest
 {
     private static final String LOGIN_ENDPOINT = "/auth/login";
 
