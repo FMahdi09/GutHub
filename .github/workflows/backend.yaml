@@ -90,3 +90,9 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: mvn -B install -DskipTests org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=FMahdi09_GutHub
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: guthub-build-java-${{ matrix.java }}
+          path: ./Backend/target
