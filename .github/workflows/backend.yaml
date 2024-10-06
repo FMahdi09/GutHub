@@ -49,7 +49,7 @@ jobs:
       - name: run integration tests
         run: mvn clean test -PIntegration
 
-  build and analyze:
+  build:
     needs: test
     runs-on: ubuntu-22.04
     defaults:
