@@ -7,12 +7,14 @@ import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import java.io.Serializable;
+
 @Entity
 @Table(name = "roles")
 @Getter
 @Setter
 @NoArgsConstructor
-public class Role
+public class Role implements Serializable
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
