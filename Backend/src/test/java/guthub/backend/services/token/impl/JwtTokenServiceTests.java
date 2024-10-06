@@ -18,9 +18,9 @@ import java.util.stream.Stream;
 public class JwtTokenServiceTests extends BaseUnitTest
 {
     //region <testData>
-    private static final String accessTokenSecret = "/XY7T4/5RESFRkjPPzIXOiUHhN4iHfvb8EGKrRVI1qfwOcSdXU0QJigsrfcFuLE5zE3aIJXuX87LWSeUAX8/C+n/USK9Orkd1qDZUS3aVwc/X1caY/nphTsdR1cjBk6Zpn5LUl/3qPf6zTm/ByLpedYe5ywZk6Qy99L5hNPyiMbaYs6IAcKMhQhWhc7+ZLAsT6CjOLczoou9/EzNd7RyuKGQJDsTLRMYcqmRQQ==";
+    private static final String ACCESS_TOKEN_SECRET = "/XY7T4/5RESFRkjPPzIXOiUHhN4iHfvb8EGKrRVI1qfwOcSdXU0QJigsrfcFuLE5zE3aIJXuX87LWSeUAX8/C+n/USK9Orkd1qDZUS3aVwc/X1caY/nphTsdR1cjBk6Zpn5LUl/3qPf6zTm/ByLpedYe5ywZk6Qy99L5hNPyiMbaYs6IAcKMhQhWhc7+ZLAsT6CjOLczoou9/EzNd7RyuKGQJDsTLRMYcqmRQQ==";
 
-    private static final String refreshTokenSecret = "4Zxi+xJDyCnSrJFhxwxc4K56W2yEPaQJqYqMOdzKEb8aVL2vTIeiamkUX+fXMRecw95B2X1/7FQ/HzExMzd/sUB5fCtqhSnXE7iwg3pInyc+z7saGubj4hTGpUm+mVXkANCJ7/IjkpPDpWB+i86FCYiuP8GftHW+AenupLzABYGRucwXIOB1fTFDDVzq0j7FEXeWJgGDIP7PSBalSs0jYDB/tC1tthsckkCFZg==";
+    private static final String REFRESH_TOKEN_SECRET = "4Zxi+xJDyCnSrJFhxwxc4K56W2yEPaQJqYqMOdzKEb8aVL2vTIeiamkUX+fXMRecw95B2X1/7FQ/HzExMzd/sUB5fCtqhSnXE7iwg3pInyc+z7saGubj4hTGpUm+mVXkANCJ7/IjkpPDpWB+i86FCYiuP8GftHW+AenupLzABYGRucwXIOB1fTFDDVzq0j7FEXeWJgGDIP7PSBalSs0jYDB/tC1tthsckkCFZg==";
     //endregion
 
     @Mock
@@ -143,10 +143,10 @@ public class JwtTokenServiceTests extends BaseUnitTest
     void setUp()
     {
         BDDMockito.given(configuration.getAccessTokenSecret())
-                .willReturn(accessTokenSecret);
+                .willReturn(ACCESS_TOKEN_SECRET);
 
         BDDMockito.given(configuration.getRefreshTokenSecret())
-                .willReturn(refreshTokenSecret);
+                .willReturn(REFRESH_TOKEN_SECRET);
 
         jwtTokenService = new JwtTokenService(configuration);
     }
