@@ -1,11 +1,11 @@
 package guthub.backend.controllers;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import guthub.backend.BaseIntegrationTest;
 import guthub.backend.dtos.DetailedUserDto;
 import guthub.backend.dtos.RegisterDto;
 import guthub.backend.dtos.UserDto;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -181,8 +181,8 @@ class UserControllerTests extends BaseIntegrationTest
 
         // act
         mockMvc.perform(post(USER_ENDPOINT)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestBody))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
                 // assert
                 .andExpect(status().isBadRequest());
     }

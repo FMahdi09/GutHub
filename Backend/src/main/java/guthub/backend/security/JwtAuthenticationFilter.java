@@ -1,8 +1,8 @@
 package guthub.backend.security;
 
+import guthub.backend.services.token.TokenService;
 import guthub.backend.services.token.exceptions.ExpiredTokenException;
 import guthub.backend.services.token.exceptions.InvalidTokenException;
-import guthub.backend.services.token.TokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

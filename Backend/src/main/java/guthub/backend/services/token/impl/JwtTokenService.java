@@ -1,9 +1,9 @@
 package guthub.backend.services.token.impl;
 
 import guthub.backend.configuration.JwtConfiguration;
+import guthub.backend.services.token.TokenService;
 import guthub.backend.services.token.exceptions.ExpiredTokenException;
 import guthub.backend.services.token.exceptions.InvalidTokenException;
-import guthub.backend.services.token.TokenService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;

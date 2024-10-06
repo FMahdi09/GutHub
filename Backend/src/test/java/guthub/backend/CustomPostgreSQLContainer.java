@@ -8,12 +8,15 @@ public class CustomPostgreSQLContainer extends PostgreSQLContainer<CustomPostgre
 
     private static CustomPostgreSQLContainer container;
 
-    private CustomPostgreSQLContainer() {
+    private CustomPostgreSQLContainer()
+    {
         super(IMAGE_VERSION);
     }
 
-    public static CustomPostgreSQLContainer getInstance() {
-        if (container == null) {
+    public static CustomPostgreSQLContainer getInstance()
+    {
+        if (container == null)
+        {
             container = new CustomPostgreSQLContainer();
         }
 
@@ -21,7 +24,8 @@ public class CustomPostgreSQLContainer extends PostgreSQLContainer<CustomPostgre
     }
 
     @Override
-    public void stop() {
+    public void stop()
+    {
         // do nothing, JVM handles shutdown
     }
 }

@@ -4,7 +4,6 @@ import guthub.backend.configuration.AuthenticationConfiguration;
 import guthub.backend.services.authentication.AuthenticationService;
 import guthub.backend.services.token.TokenPair;
 import guthub.backend.services.token.TokenService;
-import guthub.backend.services.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,8 +17,6 @@ public class SpringAuthenticationService implements AuthenticationService
 {
     private final AuthenticationManager authenticationManager;
 
-    private final UserService userService;
-
     private final TokenService tokenService;
 
     private final int accessTokenDuration;
@@ -28,12 +25,10 @@ public class SpringAuthenticationService implements AuthenticationService
 
     @Autowired
     public SpringAuthenticationService(AuthenticationManager authenticationManager,
-                                       UserService userService,
                                        TokenService tokenService,
                                        AuthenticationConfiguration authenticationConfiguration)
     {
         this.authenticationManager = authenticationManager;
-        this.userService = userService;
         this.tokenService = tokenService;
 
         this.accessTokenDuration = authenticationConfiguration.getAccessTokenDuration();
