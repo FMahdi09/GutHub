@@ -96,3 +96,38 @@ jobs:
         with:
           name: guthub-build-java-${{ matrix.java }}
           path: ./Backend/target
+
+  deliver:
+    needs: build
+    runs-on: ubuntu-22.04
+    if: github.ref_type == 'tag'
+    strategy:
+      matrix:
+        java: [ 23 ]
+
+    name: Deliver Docker image
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@master
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: guthub-build-java-${{ matrix.java }}
+          path: ./Backend/target
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }} 
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: ./Backend
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/guthub-backend:${{ github.ref_name }}, ${{ secrets.DOCKERHUB_USERNAME }}/guthub-backend:latest
