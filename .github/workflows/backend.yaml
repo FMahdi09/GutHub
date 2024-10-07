@@ -5,6 +5,8 @@ on:
     paths:
       - .github/**
       - Backend/**
+    tags:
+      - backend/*.*.*
 
 jobs:
   lint:
@@ -125,9 +127,15 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }} 
 
+      - name: Get version from tag
+        id: get-version
+        run: |
+          fullVersion=${{ github.ref_name }}
+          echo "version=${fullVersion:8}" >> $GITHUB_OUTPUT
+
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
           context: ./Backend
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/guthub-backend:${{ github.ref_name }}, ${{ secrets.DOCKERHUB_USERNAME }}/guthub-backend:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/guthub-backend:${{ steps.get-version.outputs.version }}, ${{ secrets.DOCKERHUB_USERNAME }}/guthub-backend:latest
