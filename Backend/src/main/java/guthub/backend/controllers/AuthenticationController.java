@@ -8,10 +8,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/auth")
@@ -33,6 +30,20 @@ public class AuthenticationController
                 loginDto.getUsername(),
                 loginDto.getPassword()
         );
+
+        Cookie refreshCookie = new Cookie("refreshToken", tokens.getRefreshToken());
+        refreshCookie.setSecure(true);
+        refreshCookie.setHttpOnly(true);
+        response.addCookie(refreshCookie);
+
+        return new TokenDto(tokens.getAccessToken());
+    }
+
+    @PostMapping(path = "/refresh")
+    public TokenDto refresh(HttpServletResponse response,
+                            @CookieValue("refreshToken") String refreshToken)
+    {
+        TokenPair tokens = authenticationService.refresh(refreshToken);
 
         Cookie refreshCookie = new Cookie("refreshToken", tokens.getRefreshToken());
         refreshCookie.setSecure(true);
