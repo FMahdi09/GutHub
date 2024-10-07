@@ -2,6 +2,7 @@ package guthub.backend.services.token.impl;
 
 import guthub.backend.BaseUnitTest;
 import guthub.backend.configuration.JwtConfiguration;
+import guthub.backend.services.token.TokenPair;
 import guthub.backend.services.token.exceptions.ExpiredTokenException;
 import guthub.backend.services.token.exceptions.InvalidTokenException;
 import org.junit.jupiter.api.Assertions;
@@ -21,6 +22,10 @@ class JwtTokenServiceTests extends BaseUnitTest
     private static final String ACCESS_TOKEN_SECRET = "/XY7T4/5RESFRkjPPzIXOiUHhN4iHfvb8EGKrRVI1qfwOcSdXU0QJigsrfcFuLE5zE3aIJXuX87LWSeUAX8/C+n/USK9Orkd1qDZUS3aVwc/X1caY/nphTsdR1cjBk6Zpn5LUl/3qPf6zTm/ByLpedYe5ywZk6Qy99L5hNPyiMbaYs6IAcKMhQhWhc7+ZLAsT6CjOLczoou9/EzNd7RyuKGQJDsTLRMYcqmRQQ==";
 
     private static final String REFRESH_TOKEN_SECRET = "4Zxi+xJDyCnSrJFhxwxc4K56W2yEPaQJqYqMOdzKEb8aVL2vTIeiamkUX+fXMRecw95B2X1/7FQ/HzExMzd/sUB5fCtqhSnXE7iwg3pInyc+z7saGubj4hTGpUm+mVXkANCJ7/IjkpPDpWB+i86FCYiuP8GftHW+AenupLzABYGRucwXIOB1fTFDDVzq0j7FEXeWJgGDIP7PSBalSs0jYDB/tC1tthsckkCFZg==";
+
+    private static final int ACCESS_TOKEN_EXPIRATION = 70000;
+
+    private static final int REFRESH_TOKEN_EXPIRATION = 700000;
     //endregion
 
     @Mock
@@ -29,50 +34,26 @@ class JwtTokenServiceTests extends BaseUnitTest
     private JwtTokenService jwtTokenService;
 
     //region <testFunctions>
-    private static Stream<Arguments> getValidAccessTokenData()
+    private static Stream<Arguments> getValidTokenData()
     {
         return Stream.of(
                 Arguments.of(
                         "Subject",
                         new Date(1727913600L * 1000),
-                        new Date(1728000000L * 1000),
-                        "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJTdWJqZWN0IiwiaWF0IjoxNzI3OTEzNjAwLCJleHAiOjE3MjgwMDAwMDB9.eUaZ-DR_Bi2_vbI_lRBeBtn8Fof83Wf8a2wS6qNeb-uXGa9INEYPvDZU_4TeO5WhTEW5MJKAVDF4eMaC6t8yYw"
+                        "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJTdWJqZWN0IiwiaWF0IjoxNzI3OTEzNjAwLCJleHAiOjE3Mjc5MTM2NzB9.ZAPy1-9P8IQ3F3aYalfDUe3Ie1ejo9A7PRiRlcW6CdbjhBv7plK2A6tdisFZ59os5ec6jGAfTHlvfDnSaWC9yw",
+                        "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJTdWJqZWN0IiwiaWF0IjoxNzI3OTEzNjAwLCJleHAiOjE3Mjc5MTQzMDB9.HOmppXltT8KmWnQXMKaumPqfSa5b2IHSuvfya34PxDfifVobJ1a-SyJFPrJSjFUlO7PQbECqua2lqW4cAiLkhg"
                 ),
                 Arguments.of(
-                        "my very very important subject",
+                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis molestie mauris at tortor pulvinar, vitae facilisis sem finibus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sapien tortor, suscipit nec dui sed, elementum vehicula nibh. Donec viverra eleifend sapien, eget pellentesque massa aliquet eget. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Proin eu nibh eleifend, consequat massa non, fringilla leo. Phasellus sed orci lorem. In lobortis hendrerit neque. Fusce vitae enim ullamcorper, mattis mauris vel, dictum erat. Pellentesque sed metus non velit feugiat interdum quis nec orci. Proin elementum tellus ipsum, sit amet elementum massa dignissim at. Morbi sed placerat massa, porttitor accumsan mi. Duis ut metus vel purus faucibus lacinia sit amet ac enim. Sed justo nisl, finibus eget auctor ac, facilisis sed turpis. Vivamus purus nisl, pharetra sed fringilla et, malesuada at enim. Nunc lorem est, viverra ac sapien vel, vestibulum blandit augue.",
                         new Date(1827913600L * 1000),
-                        new Date(1828000000L * 1000),
-                        "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJteSB2ZXJ5IHZlcnkgaW1wb3J0YW50IHN1YmplY3QiLCJpYXQiOjE4Mjc5MTM2MDAsImV4cCI6MTgyODAwMDAwMH0.BT3azCLPt5UywgpQr1waA6wQWx3TVfEEp78Lu_0VRLR_JxHeW4WNMNqzZcwh9pVYcEPEnh0_LCH4bNr2ugWEnA"
+                        "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJMb3JlbSBpcHN1bSBkb2xvciBzaXQgYW1ldCwgY29uc2VjdGV0dXIgYWRpcGlzY2luZyBlbGl0LiBEdWlzIG1vbGVzdGllIG1hdXJpcyBhdCB0b3J0b3IgcHVsdmluYXIsIHZpdGFlIGZhY2lsaXNpcyBzZW0gZmluaWJ1cy4gTG9yZW0gaXBzdW0gZG9sb3Igc2l0IGFtZXQsIGNvbnNlY3RldHVyIGFkaXBpc2NpbmcgZWxpdC4gQWVuZWFuIHNhcGllbiB0b3J0b3IsIHN1c2NpcGl0IG5lYyBkdWkgc2VkLCBlbGVtZW50dW0gdmVoaWN1bGEgbmliaC4gRG9uZWMgdml2ZXJyYSBlbGVpZmVuZCBzYXBpZW4sIGVnZXQgcGVsbGVudGVzcXVlIG1hc3NhIGFsaXF1ZXQgZWdldC4gT3JjaSB2YXJpdXMgbmF0b3F1ZSBwZW5hdGlidXMgZXQgbWFnbmlzIGRpcyBwYXJ0dXJpZW50IG1vbnRlcywgbmFzY2V0dXIgcmlkaWN1bHVzIG11cy4gUHJvaW4gZXUgbmliaCBlbGVpZmVuZCwgY29uc2VxdWF0IG1hc3NhIG5vbiwgZnJpbmdpbGxhIGxlby4gUGhhc2VsbHVzIHNlZCBvcmNpIGxvcmVtLiBJbiBsb2JvcnRpcyBoZW5kcmVyaXQgbmVxdWUuIEZ1c2NlIHZpdGFlIGVuaW0gdWxsYW1jb3JwZXIsIG1hdHRpcyBtYXVyaXMgdmVsLCBkaWN0dW0gZXJhdC4gUGVsbGVudGVzcXVlIHNlZCBtZXR1cyBub24gdmVsaXQgZmV1Z2lhdCBpbnRlcmR1bSBxdWlzIG5lYyBvcmNpLiBQcm9pbiBlbGVtZW50dW0gdGVsbHVzIGlwc3VtLCBzaXQgYW1ldCBlbGVtZW50dW0gbWFzc2EgZGlnbmlzc2ltIGF0LiBNb3JiaSBzZWQgcGxhY2VyYXQgbWFzc2EsIHBvcnR0aXRvciBhY2N1bXNhbiBtaS4gRHVpcyB1dCBtZXR1cyB2ZWwgcHVydXMgZmF1Y2lidXMgbGFjaW5pYSBzaXQgYW1ldCBhYyBlbmltLiBTZWQganVzdG8gbmlzbCwgZmluaWJ1cyBlZ2V0IGF1Y3RvciBhYywgZmFjaWxpc2lzIHNlZCB0dXJwaXMuIFZpdmFtdXMgcHVydXMgbmlzbCwgcGhhcmV0cmEgc2VkIGZyaW5naWxsYSBldCwgbWFsZXN1YWRhIGF0IGVuaW0uIE51bmMgbG9yZW0gZXN0LCB2aXZlcnJhIGFjIHNhcGllbiB2ZWwsIHZlc3RpYnVsdW0gYmxhbmRpdCBhdWd1ZS4iLCJpYXQiOjE4Mjc5MTM2MDAsImV4cCI6MTgyNzkxMzY3MH0.SXDyOAqyf1sXLrKHyREZm7d5Vs6G9MkVoj2UI58Ft-MkKokhd71cEhMlFeFhWlQPOvuZZWgCZ5Oc2HSw7aG09Q",
+                        "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJMb3JlbSBpcHN1bSBkb2xvciBzaXQgYW1ldCwgY29uc2VjdGV0dXIgYWRpcGlzY2luZyBlbGl0LiBEdWlzIG1vbGVzdGllIG1hdXJpcyBhdCB0b3J0b3IgcHVsdmluYXIsIHZpdGFlIGZhY2lsaXNpcyBzZW0gZmluaWJ1cy4gTG9yZW0gaXBzdW0gZG9sb3Igc2l0IGFtZXQsIGNvbnNlY3RldHVyIGFkaXBpc2NpbmcgZWxpdC4gQWVuZWFuIHNhcGllbiB0b3J0b3IsIHN1c2NpcGl0IG5lYyBkdWkgc2VkLCBlbGVtZW50dW0gdmVoaWN1bGEgbmliaC4gRG9uZWMgdml2ZXJyYSBlbGVpZmVuZCBzYXBpZW4sIGVnZXQgcGVsbGVudGVzcXVlIG1hc3NhIGFsaXF1ZXQgZWdldC4gT3JjaSB2YXJpdXMgbmF0b3F1ZSBwZW5hdGlidXMgZXQgbWFnbmlzIGRpcyBwYXJ0dXJpZW50IG1vbnRlcywgbmFzY2V0dXIgcmlkaWN1bHVzIG11cy4gUHJvaW4gZXUgbmliaCBlbGVpZmVuZCwgY29uc2VxdWF0IG1hc3NhIG5vbiwgZnJpbmdpbGxhIGxlby4gUGhhc2VsbHVzIHNlZCBvcmNpIGxvcmVtLiBJbiBsb2JvcnRpcyBoZW5kcmVyaXQgbmVxdWUuIEZ1c2NlIHZpdGFlIGVuaW0gdWxsYW1jb3JwZXIsIG1hdHRpcyBtYXVyaXMgdmVsLCBkaWN0dW0gZXJhdC4gUGVsbGVudGVzcXVlIHNlZCBtZXR1cyBub24gdmVsaXQgZmV1Z2lhdCBpbnRlcmR1bSBxdWlzIG5lYyBvcmNpLiBQcm9pbiBlbGVtZW50dW0gdGVsbHVzIGlwc3VtLCBzaXQgYW1ldCBlbGVtZW50dW0gbWFzc2EgZGlnbmlzc2ltIGF0LiBNb3JiaSBzZWQgcGxhY2VyYXQgbWFzc2EsIHBvcnR0aXRvciBhY2N1bXNhbiBtaS4gRHVpcyB1dCBtZXR1cyB2ZWwgcHVydXMgZmF1Y2lidXMgbGFjaW5pYSBzaXQgYW1ldCBhYyBlbmltLiBTZWQganVzdG8gbmlzbCwgZmluaWJ1cyBlZ2V0IGF1Y3RvciBhYywgZmFjaWxpc2lzIHNlZCB0dXJwaXMuIFZpdmFtdXMgcHVydXMgbmlzbCwgcGhhcmV0cmEgc2VkIGZyaW5naWxsYSBldCwgbWFsZXN1YWRhIGF0IGVuaW0uIE51bmMgbG9yZW0gZXN0LCB2aXZlcnJhIGFjIHNhcGllbiB2ZWwsIHZlc3RpYnVsdW0gYmxhbmRpdCBhdWd1ZS4iLCJpYXQiOjE4Mjc5MTM2MDAsImV4cCI6MTgyNzkxNDMwMH0.yaP1wGXpYq3O7md2zm_lMk0lNuoW6L7VzhfYyDeQQtcUQ9Q01sfoycIgJgwOw9bWExOclDgjXPBtF91zdOkqqQ"
                 ),
                 Arguments.of(
                         "",
                         new Date(0),
-                        new Date(0),
-                        "eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjAsImV4cCI6MH0.Gv6ZKhR47BNKFhHp2vH0We65LIjwWfyZ23nw2D94rk6R7umRY8SZ41vMy8eUgsHHeV6myKNEdsbFQHMzj_uyCQ"
-                )
-        );
-    }
-
-    private static Stream<Arguments> getValidRefreshTokenData()
-    {
-        return Stream.of(
-                Arguments.of(
-                        "Subject",
-                        new Date(1727913600L * 1000),
-                        new Date(1728000000L * 1000),
-                        "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJTdWJqZWN0IiwiaWF0IjoxNzI3OTEzNjAwLCJleHAiOjE3MjgwMDAwMDB9.ZqimbkGrX19L9uVDDV9FxqDzTdMDdNizI3I6_aGAbEkgTryJ709G1GG80Je6n_WcZ0yuedBRvm1rQwdhaUbPyg"
-                ),
-                Arguments.of(
-                        "my very very important subject",
-                        new Date(1827913600L * 1000),
-                        new Date(1828000000L * 1000),
-                        "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJteSB2ZXJ5IHZlcnkgaW1wb3J0YW50IHN1YmplY3QiLCJpYXQiOjE4Mjc5MTM2MDAsImV4cCI6MTgyODAwMDAwMH0.T_9XdD0MBD3wkHd-6wh54KvvCOk7UHepU97MCCTZ4HsTGK7V4rT7IFuflRFIUxBnA3vb0qODCY6GQq0GrcnvCA"
-                ),
-                Arguments.of(
-                        "",
-                        new Date(0),
-                        new Date(0),
-                        "eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjAsImV4cCI6MH0.Bfz2P8aqxLrvoUrx9QCu4GuRfSjoYJJzFgTaJJDDsyvVAHUeLqeMmpVwaNpij8mrjo3B61h4k305VegRyDHSNQ"
+                        "eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjAsImV4cCI6NzB9.mwyE0kmhICQnt2peK5E47RnnfDY6JtjP-oxDTS-6fXjlGl1e-qIvU9OjD6xLsrMQkYqlcenoOimhY9SeBcn-og",
+                        "eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjAsImV4cCI6NzAwfQ.HAYzO6TXYKC6cacrV3sXQ6EvNKW-lWTB_KCo-WFsS6SGAWp4uK2VXPbL9J2wt83aDifnYC9l2mmkiK-taOokPw"
                 )
         );
     }
@@ -148,35 +129,28 @@ class JwtTokenServiceTests extends BaseUnitTest
         BDDMockito.given(configuration.getRefreshTokenSecret())
                 .willReturn(REFRESH_TOKEN_SECRET);
 
+        BDDMockito.given(configuration.getAccessTokenExpiration())
+                .willReturn(ACCESS_TOKEN_EXPIRATION);
+
+        BDDMockito.given(configuration.getRefreshTokenExpiration())
+                .willReturn(REFRESH_TOKEN_EXPIRATION);
+
         jwtTokenService = new JwtTokenService(configuration);
     }
 
     @ParameterizedTest
-    @MethodSource("getValidAccessTokenData")
-    void generateAccessToken_givenValidData_generateToken(String subject,
-                                                          Date issuedAt,
-                                                          Date expiresAt,
-                                                          String expectedToken)
+    @MethodSource("getValidTokenData")
+    void generateTokenPair_givenValidData_generateValidTokenPair(String subject,
+                                                                 Date issuedAt,
+                                                                 String expectedAccessToken,
+                                                                 String expectedRefreshToken)
     {
         // act
-        String createdToken = jwtTokenService.generateAccessToken(subject, issuedAt, expiresAt);
+        TokenPair tokenPair = jwtTokenService.generateTokenPair(subject, issuedAt);
 
         // assert
-        Assertions.assertEquals(expectedToken, createdToken);
-    }
-
-    @ParameterizedTest
-    @MethodSource("getValidRefreshTokenData")
-    void generateRefreshToken_givenValidData_generateToken(String subject,
-                                                           Date issuedAt,
-                                                           Date expiresAt,
-                                                           String expectedToken)
-    {
-        // act
-        String createdToken = jwtTokenService.generateRefreshToken(subject, issuedAt, expiresAt);
-
-        // assert
-        Assertions.assertEquals(expectedToken, createdToken);
+        Assertions.assertEquals(tokenPair.getAccessToken(), expectedAccessToken);
+        Assertions.assertEquals(tokenPair.getRefreshToken(), expectedRefreshToken);
     }
 
     @ParameterizedTest

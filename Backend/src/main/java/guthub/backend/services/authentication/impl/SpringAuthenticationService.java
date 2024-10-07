@@ -1,6 +1,5 @@
 package guthub.backend.services.authentication.impl;
 
-import guthub.backend.configuration.AuthenticationConfiguration;
 import guthub.backend.services.authentication.AuthenticationService;
 import guthub.backend.services.token.TokenPair;
 import guthub.backend.services.token.TokenService;
@@ -19,20 +18,12 @@ public class SpringAuthenticationService implements AuthenticationService
 
     private final TokenService tokenService;
 
-    private final int accessTokenDuration;
-
-    private final int refreshTokenDuration;
-
     @Autowired
     public SpringAuthenticationService(AuthenticationManager authenticationManager,
-                                       TokenService tokenService,
-                                       AuthenticationConfiguration authenticationConfiguration)
+                                       TokenService tokenService)
     {
         this.authenticationManager = authenticationManager;
         this.tokenService = tokenService;
-
-        this.accessTokenDuration = authenticationConfiguration.getAccessTokenDuration();
-        this.refreshTokenDuration = authenticationConfiguration.getRefreshTokenDuration();
     }
 
     @Override
@@ -46,21 +37,7 @@ public class SpringAuthenticationService implements AuthenticationService
         );
 
         Date issuedAt = new Date();
-        Date accessExpiration = new Date(issuedAt.getTime() + accessTokenDuration);
-        Date refreshExpiration = new Date(issuedAt.getTime() + refreshTokenDuration);
-
-        String accessToken = tokenService.generateAccessToken(
-                authentication.getName(),
-                issuedAt,
-                accessExpiration
-        );
-
-        String refreshToken = tokenService.generateRefreshToken(
-                authentication.getName(),
-                issuedAt,
-                refreshExpiration
-        );
-
-        return new TokenPair(accessToken, refreshToken);
+       
+        return tokenService.generateTokenPair(authentication.getName(), issuedAt);
     }
 }
