@@ -88,8 +88,8 @@ jobs:
 
       - name: Build and analyze
         env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: mvn -B install -DskipTests org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=FMahdi09_GutHub
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_BACKEND }}
+        run: mvn -B install -DskipTests org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=fmahdi09_GutHub_Backend
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
