@@ -58,7 +58,7 @@ nav {
 }
 
 .showForMobile {
-  @media screen and (max-width: screensizes.$small-screen){
+  @media screen and (max-width: screensizes.$small-screen) {
     display: flex;
   }
 }
