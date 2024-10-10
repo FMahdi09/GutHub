@@ -5,23 +5,23 @@
     <nav [ngClass]="expandHeader ? 'showForMobile' : ''">
         <ul>
             <li>
-                <a routerLink="/"
+                <a routerLink=""
                    routerLinkActive="isActive"
                    [routerLinkActiveOptions]="{exact: true }">Home</a>
             </li>
             <li>
-                <a routerLink="/explore/users" routerLinkActive="isActive">Explore</a>
+                <a routerLink="explore" routerLinkActive="isActive">Explore</a>
             </li>
             <li>
-                <a routerLink="/faq" routerLinkActive="isActive">FAQ</a>
+                <a routerLink="faq" routerLinkActive="isActive">FAQ</a>
             </li>
         </ul>
         <ul>
             <li>
-                <a routerLink="/login" routerLinkActive="isActive">Login</a>
+                <a routerLink="login" routerLinkActive="isActive">Login</a>
             </li>
             <li>
-                <a routerLink="/register" routerLinkActive="isActive">Register</a>
+                <a routerLink="register" routerLinkActive="isActive">Register</a>
             </li>
         </ul>
     </nav>
