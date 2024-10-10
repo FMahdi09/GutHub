@@ -1,23 +1,26 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { RepositoryListComponent } from './repository-list.component';
+import {RepositoryListComponent} from './repository-list.component';
 
-describe('RepositoryListComponent', () => {
-  let component: RepositoryListComponent;
-  let fixture: ComponentFixture<RepositoryListComponent>;
+describe('RepositoryListComponent', () =>
+{
+    let component: RepositoryListComponent;
+    let fixture: ComponentFixture<RepositoryListComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [RepositoryListComponent]
-    })
-    .compileComponents();
+    beforeEach(async () =>
+    {
+        await TestBed.configureTestingModule({
+            imports: [RepositoryListComponent]
+        })
+            .compileComponents();
 
-    fixture = TestBed.createComponent(RepositoryListComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+        fixture = TestBed.createComponent(RepositoryListComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it('should create', () =>
+    {
+        expect(component).toBeTruthy();
+    });
 });
