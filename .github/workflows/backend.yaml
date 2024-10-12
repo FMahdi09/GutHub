@@ -21,11 +21,8 @@ jobs:
     defaults:
       run:
         working-directory: ./Backend
-    strategy:
-      matrix:
-        java: [ 23 ]
 
-    name: Run tests on Java ${{ matrix.java }}
+    name: Run tests
     steps:
       - name: Checkout repo
         uses: actions/checkout@master
@@ -34,7 +31,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: zulu
-          java-version: ${{ matrix.java }}
+          java-version: 23
       
       - name: Cache Maven packages
         uses: actions/cache@v4
@@ -55,11 +52,8 @@ jobs:
     defaults:
       run:
         working-directory: ./Backend
-    strategy:
-      matrix:
-        java: [ 23 ]
 
-    name: Build and analyze on Java ${{ matrix.java }}
+    name: Build and analyze
     steps:
       - name: Checkout repo
         uses: actions/checkout@master
@@ -70,7 +64,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: zulu
-          java-version: ${{ matrix.java }}
+          java-version: 23
 
       - name: Cache SonarCloud packages
         uses: actions/cache@v4
@@ -94,16 +88,13 @@ jobs:
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: guthub-build-java-${{ matrix.java }}
+          name: guthub-build-java-23
           path: ./Backend/target
 
   deliver:
     needs: build
     runs-on: ubuntu-22.04
-    if: github.ref_type == 'tag'
-    strategy:
-      matrix:
-        java: [ 23 ]
+    if: startsWith(github.ref, 'refs/tags/backend')
 
     name: Deliver Docker image
     steps:
@@ -113,7 +104,7 @@ jobs:
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
-          name: guthub-build-java-${{ matrix.java }}
+          name: guthub-build-java-23
           path: ./Backend/target
 
       - name: Set up Docker Buildx
