@@ -1,5 +1,6 @@
 package guthub.backend.security;
 
+import guthub.backend.configuration.FrontendConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,10 +27,14 @@ public class SecurityConfig
 {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
+    private final FrontendConfiguration frontendConfiguration;
+
     @Autowired
-    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter)
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter,
+                          FrontendConfiguration frontendConfiguration)
     {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+        this.frontendConfiguration = frontendConfiguration;
     }
 
     @Bean
@@ -79,7 +84,7 @@ public class SecurityConfig
     public CorsConfigurationSource corsConfigurationSource()
     {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOrigin("http://localhost:5173");
+        configuration.addAllowedOrigin(frontendConfiguration.getFrontendUrl());
         configuration.setAllowedMethods(Arrays.asList(
                 HttpMethod.GET.name(),
                 HttpMethod.HEAD.name(),
