@@ -100,7 +100,7 @@ jobs:
   deliver:
     needs: build
     runs-on: ubuntu-22.04
-    if: github.ref_type == 'tag'
+    if: startsWith(github.ref, 'ref/tags/backend')
     strategy:
       matrix:
         java: [ 23 ]
