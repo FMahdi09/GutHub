@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "guthub")
 @Getter
 @Setter
-public class MainConfiguration implements JwtConfiguration
+public class MainConfiguration implements JwtConfiguration, FrontendConfiguration
 {
     private String accessTokenSecret;
 
@@ -18,4 +18,6 @@ public class MainConfiguration implements JwtConfiguration
     private int accessTokenExpiration;
 
     private int refreshTokenExpiration;
+
+    private String frontendUrl;
 }

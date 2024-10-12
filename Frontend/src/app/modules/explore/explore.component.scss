@@ -1,7 +1,7 @@
 @use "colors";
 
 nav {
-  height: 2.5rem;
+  min-height: 2.5rem;
 
   display: flex;
   justify-content: center;
@@ -16,12 +16,15 @@ nav {
 
     display: flex;
     flex-direction: row;
+    align-self: center;
 
     list-style: none;
   }
 
   a {
-    padding: 10px 12px 10px 12px;
+    min-height: 2.5rem;
+
+    padding: 0 12px;
 
     display: flex;
     align-items: center;
