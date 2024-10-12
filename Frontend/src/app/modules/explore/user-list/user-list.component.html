@@ -1,1 +1,8 @@
-<p>user-list works!</p>
+<ul>
+    @for (user of users$ | async; track user.id) {
+        <app-list-item
+                [title]="user.username"
+                body="This is the body"
+        />
+    }
+</ul>
