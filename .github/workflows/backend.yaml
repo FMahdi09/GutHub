@@ -1,4 +1,4 @@
-name: GutHub Backend 
+name: GutHub Backend
 
 on:
   push:
@@ -32,7 +32,7 @@ jobs:
         with:
           distribution: zulu
           java-version: 23
-      
+
       - name: Cache Maven packages
         uses: actions/cache@v4
         with:
@@ -114,7 +114,7 @@ jobs:
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }} 
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Get version from tag
         id: get-version
@@ -128,3 +128,44 @@ jobs:
           context: ./Backend
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/guthub-backend:${{ steps.get-version.outputs.version }}, ${{ secrets.DOCKERHUB_USERNAME }}/guthub-backend:latest
+
+  deploy:
+    needs: deliver
+    runs-on: ubuntu-22.04
+    if: startsWith(github.ref, 'refs/tags/backend')
+    defaults:
+      run:
+        working-directory: ./Backend/deploy
+
+    name: Deploy Docker image
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@master
+
+      - name: create .env file
+        run: |
+          touch .env
+          echo POSTGRES_USER=${{ secrets.POSTGRES_USER }} >> .env
+          echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
+          echo BACKEND_ACCESS_TOKEN_SECRET=${{ secrets.BACKEND_ACCESS_TOKEN_SECRET }} >> .env
+          echo BACKEND_REFRESH_TOKEN_SECRET=${{ secrets.BACKEND_REFRESH_TOKEN_SECRET }} >> .env
+          echo BACKEND_DATASOURCE_URL=${{ secrets.BACKEND_DATASOURCE_URL }} >> .env
+
+      - name: copy files to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: guthub-backend.zapto.org
+          username: root
+          port: 22
+          key: ${{ secrets.BACKEND_SSH_KEY }}
+          source: "./Backend/deploy/.env,./Backend/deploy/docker-compose.yaml"
+          target: ./
+
+      - name: deploy image
+        uses: appleboy/ssh-action@v1.1.0
+        with:
+          host: guthub-backend.zapto.org
+          username: root
+          key: ${{ secrets.BACKEND_SSH_KEY }}
+          port: 22
+          script: sudo docker compose -f ./Backend/deploy/docker-compose.yaml up -d
