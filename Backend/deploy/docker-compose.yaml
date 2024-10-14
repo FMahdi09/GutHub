@@ -19,7 +19,7 @@ services:
       REFRESH_TOKEN_SECRET: ${BACKEND_REFRESH_TOKEN_SECRET}
       FRONTEND_URL: todo
     ports:
-      - "8080:8080"
+      - "80:8080"
 
 volumes:
   postgres:
