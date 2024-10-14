@@ -4,7 +4,7 @@ on:
   push:
     paths:
       - .github/**
-      -  Frontend/**
+      - Frontend/**
 
 jobs:
   lint:
@@ -15,8 +15,26 @@ jobs:
       - name: lint here
         run: echo "linting . . ."
 
-  test:
+  analysis:
     needs: lint
+    runs-on: ubuntu-22.04
+
+    name: Static code analysis
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@master
+        with:
+          fetch-depth: 0
+
+      - name: Sonarcloud scan
+        uses: SonarSource/sonarcloud-github-action@master
+        with:
+          projectBaseDir: ./Frontend
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_FRONTEND }}
+
+  test:
+    needs: analysis
     runs-on: ubuntu-22.04
     defaults:
       run:
