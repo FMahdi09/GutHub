@@ -126,3 +126,22 @@ jobs:
           context: ./Frontend
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/guthub-frontend:${{ steps.get-version.outputs.version }}, ${{ secrets.DOCKERHUB_USERNAME }}/guthub-frontend:latest
+
+  deploy:
+    needs: deliver
+    runs-on: ubuntu-22.04
+    if: startsWith(github.ref, 'refs/tags/frontend')
+
+    steps:
+      - name: Deploy image
+        uses: appleboy/ssh-action@v1.1.0
+        with:
+          host: guthub.zapto.org
+          username: root
+          key: ${{ secrets.FRONTEND_SSH_KEY }}
+          port: 22
+          script: |
+            sudo docker stop $(sudo docker ps -qa)
+            sudo docker rm $(sudo docker ps -qa)
+            docker rmi -f $(docker images -aq)
+            sudo docker run -p 80:80 -d fmahdi09/guthub-frontend:latest
