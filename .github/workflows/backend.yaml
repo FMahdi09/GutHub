@@ -150,6 +150,7 @@ jobs:
           echo BACKEND_ACCESS_TOKEN_SECRET=${{ secrets.BACKEND_ACCESS_TOKEN_SECRET }} >> .env
           echo BACKEND_REFRESH_TOKEN_SECRET=${{ secrets.BACKEND_REFRESH_TOKEN_SECRET }} >> .env
           echo BACKEND_DATASOURCE_URL=${{ secrets.BACKEND_DATASOURCE_URL }} >> .env
+          echo FRONTEND_URL=${{ secrets.FRONTEND_URL }} >> .env
 
       - name: copy files to server
         uses: appleboy/scp-action@v0.1.7
@@ -168,4 +169,8 @@ jobs:
           username: root
           key: ${{ secrets.BACKEND_SSH_KEY }}
           port: 22
-          script: sudo docker compose -f ./Backend/deploy/docker-compose.yaml up -d
+          script: |
+            sudo docker stop $(sudo docker ps -qa)
+            sudo docker rm $(sudo docker ps -qa)
+            docker rmi -f $(docker images -aq)
+            sudo docker compose -f ./Backend/deploy/docker-compose.yaml up -d
