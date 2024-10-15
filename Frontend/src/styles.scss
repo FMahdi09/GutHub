@@ -10,3 +10,92 @@ body {
   color: colors.$primary-text;
   Font-family: Arial, Helvetica, sans-serif;
 }
+
+form {
+  margin: 15px auto;
+  width: 90%;
+  max-width: 520px;
+
+  display: flex;
+  flex-direction: column;
+
+  background-color: colors.$form-background;
+
+  border-radius: 5px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: colors.$primary-border;
+
+  .header {
+    padding: 12px 0 12px 0;
+
+    background-color: colors.$primary-border;
+    text-align: center;
+    font-size: 1rem;
+
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+  }
+
+  .input-group {
+    margin-top: 15px;
+    width: 95%;
+    max-width: 550px;
+
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+  }
+
+  label {
+    margin-bottom: 10px;
+  }
+
+  input {
+    padding-left: 15px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+    background-color: colors.$searchbar-background;
+    color: colors.$primary-text;
+    font-size: 0.8rem;
+
+    border-color: colors.$secondary-border-color;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 5px;
+  }
+
+  input:focus {
+    outline: none;
+    border-color: colors.$link-color;
+  }
+
+  input:hover:not(:focus) {
+    border-color: colors.$searchbar-hover;
+  }
+
+  button {
+    margin: 15px;
+    padding: 11px 14px;
+    width: 95%;
+    max-width: 550px;
+
+    align-self: center;
+
+    background-color: colors.$link-color;
+    font-size: 0.9rem;
+
+    border-width: 0;
+    border-radius: 5px;
+  }
+
+  button:hover {
+    background-color: colors.$link-hover;
+  }
+
+  button:focus {
+    outline:none;
+    background-color: colors.$link-click;
+  }
+}
