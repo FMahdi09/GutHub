@@ -15,6 +15,9 @@
             <div *ngIf="username.hasError('maxlength')">
                 Username must be no more than 20 characters long.
             </div>
+            <div *ngIf="username.hasError('conflict')">
+                Username already exists
+            </div>
         </div>
     </div>
     <div class="input-group">
@@ -47,6 +50,14 @@
     <div class="input-group">
         <label for="confirmPassword">Confirm password</label>
         <input id="confirmPassword" formControlName="confirmPassword" type="password">
+        <div class="error" *ngIf="confirmPassword.invalid && (confirmPassword.dirty || !confirmPassword.untouched)">
+            <div *ngIf="confirmPassword.hasError('required')">
+                Password confirmation is required.
+            </div>
+            <div *ngIf="confirmPassword.hasError('mismatch')">
+                Passwords do not match
+            </div>
+        </div>
     </div>
     <button type="submit" [disabled]="registerForm.invalid">Register account</button>
 </form>
