@@ -90,12 +90,27 @@ form {
     border-radius: 5px;
   }
 
-  button:hover {
+  button:hover:not(:disabled) {
     background-color: colors.$link-hover;
   }
 
   button:focus {
-    outline:none;
+    outline: none;
     background-color: colors.$link-click;
+  }
+
+  .error {
+    margin-top: 10px;
+    padding: 10px;
+
+    font-size: 0.9rem;
+    text-align: center;
+
+    background-color: colors.$error-primary;
+
+    border-radius: 5px;
+    border-width: 1px;
+    border-color: colors.$error-secondary;
+    border-style: solid;
   }
 }
